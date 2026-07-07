@@ -21,6 +21,13 @@ const userNavigation = [
   { name: "Book Session", href: "/book" },
 ];
 
+const guestNavigation = [
+  { name: "Home", href: "/" },
+  { name: "Trainers", href: "/trainers" },
+  { name: "Programs", href: "/programs" },
+  { name: "Book Session", href: "/book" },
+];
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
@@ -65,7 +72,7 @@ const Header = () => {
 
   // Only admin@admin.com can see admin nav
   const isAdmin = isAdminEmail(user?.email);
-  const navigation = isAdmin ? adminNavigation : userNavigation;
+  const navigation = isAdmin ? adminNavigation : user ? userNavigation : guestNavigation;
 
   const isActive = (href: string) => {
     if (href === "/") return location.pathname === "/";

@@ -1,9 +1,10 @@
 // src/components/ProtectedRoute.tsx
 import { ReactNode, useEffect, useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
+  const location = useLocation()
   const [isLoading, setIsLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
@@ -16,7 +17,9 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
 
   if (isLoading) return null
 
-  return isAuthenticated ? <>{children}</> : <Navigate to="/signin" replace />
+  return isAuthenticated
+    ? <>{children}</>
+    : <Navigate to="/signin" replace state={{ from: location }} />
 }
 
 export default ProtectedRoute

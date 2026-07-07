@@ -1,6 +1,6 @@
 // src/pages/auth/SignIn.tsx
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { getCurrentProfile, supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,6 +11,9 @@ import { useToast } from '@/hooks/use-toast';
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo =
+    (location.state as { from?: { pathname?: string; search?: string } } | null)?.from;
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -35,7 +38,7 @@ const SignIn = () => {
       const profile = await getCurrentProfile();
       if (profile) localStorage.setItem('user', JSON.stringify(profile));
       toast({ title: 'Welcome back!', description: 'You are signed in.' });
-      navigate('/dashboard');
+      navigate(`${redirectTo?.pathname ?? '/dashboard'}${redirectTo?.search ?? ''}`, { replace: true });
     } catch (err: any) {
       toast({
         title: 'Sign In Error',

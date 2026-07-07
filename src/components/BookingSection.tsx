@@ -1,5 +1,6 @@
 // src/components/BookingSection.tsx
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,6 +17,8 @@ type Slot = { id: string; slot_start: string; slot_end: string; };
 
 export default function BookingSection() {
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+  const selectedTrainerId = searchParams.get("trainer") ?? "";
   const [formData, setFormData] = useState({
     trainer: "",
     program: "",
@@ -27,6 +30,12 @@ export default function BookingSection() {
   const [programs, setPrograms] = useState<Program[]>([]);
   const [slots, setSlots] = useState<Slot[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
+
+  useEffect(() => {
+    if (selectedTrainerId) {
+      setFormData((prev) => ({ ...prev, trainer: selectedTrainerId }));
+    }
+  }, [selectedTrainerId]);
 
   useEffect(() => {
     supabase

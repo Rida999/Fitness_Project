@@ -1,5 +1,6 @@
 // src/components/TrainersSection.tsx
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -122,9 +123,11 @@ export default function TrainersSection() {
                         <span className="text-sm">{trainer.experience}</span>
                       </div>
                     </div>
-                    <Button variant="power" className="w-full md:w-auto">
-                      <Calendar className="mr-2 h-4 w-4" />
-                      Book with {trainer.name.split(" ")[0]}
+                    <Button asChild variant="power" className="w-full md:w-auto">
+                      <Link to={`/book?trainer=${trainer.id}`}>
+                        <Calendar className="mr-2 h-4 w-4" />
+                        Book with {trainer.name.split(" ")[0]}
+                      </Link>
                     </Button>
                   </div>
                 </div>
