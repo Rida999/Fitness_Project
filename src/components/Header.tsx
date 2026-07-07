@@ -9,6 +9,7 @@ const adminNavigation = [
   { name: "Programs", href: "/admin/programs" },
   { name: "Trainers", href: "/admin/trainers" },
   { name: "Slots", href: "/admin/slots" },
+  { name: "Bookings", href: "/admin/bookings" },
   { name: "Users", href: "/admin/view_users" },
   { name: "All Trainers", href: "/admin/view_trainers" },
 ];

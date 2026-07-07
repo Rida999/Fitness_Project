@@ -1,330 +1,229 @@
-import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Dumbbell, 
-  Users, 
-  Calendar, 
-  Sparkles,
-  TrendingUp,
-  Award,
-  Star,
-  Timer,
-  ArrowRight,
-  Activity,
-  Target,
-  Zap,
-  Eye,
-  UserCheck,
-  Rocket,
-  Crown,
-  PartyPopper,
-  Heart,
-  Coffee,
-  Music
+import {
+  CalendarClock,
+  Dumbbell,
+  LayoutDashboard,
+  Plus,
+  UserRound,
+  Users,
 } from "lucide-react";
 
-const AdminDashboard = () => {
-  const navigate = useNavigate();
+type Booking = {
+  id: string;
+  status: string;
+  created_at: string;
+  profiles: {
+    email: string;
+    first_name: string | null;
+    last_name: string | null;
+  } | null;
+  programs: {
+    name: string;
+  } | null;
+  slots: {
+    slot_start: string;
+    trainers: {
+      first_name: string;
+      last_name: string;
+    } | null;
+  } | null;
+};
 
-  const adminSections = [
-    {
-      id: 'programs',
-      title: 'Fitness Programs',
-      description: 'Create and manage workout programs that inspire transformation',
-      icon: Dumbbell,
-      route: '/admin/programs',
-      gradient: 'from-admin to-admin-glow',
-      stats: 'Build Amazing Routines',
-      emoji: '💪',
-      features: ['Program Creation', 'Intensity Levels', 'Custom Icons']
-    },
-    {
-      id: 'trainers',
-      title: 'Trainer Management',
-      description: 'Build your dream team of certified fitness professionals',
-      icon: Users,
-      route: '/admin/trainers',
-      gradient: 'from-secondary to-admin2',
-      stats: 'Manage Elite Team',
-      emoji: '🏋️‍♂️',
-      features: ['Trainer Profiles', 'Rating System', 'Bio Management']
-    },
-    {
-      id: 'slots',
-      title: 'Schedule Slots',
-      description: 'Organize training sessions and availability windows',
-      icon: Calendar,
-      route: '/admin/slots',
-      gradient: 'from-admin2 to-admin',
-      stats: 'Time Organization',
-      emoji: '📅',
-      features: ['Time Management', 'Trainer Assignment', 'Session Duration']
-    }
-  ];
+const statsConfig = [
+  { key: "users", label: "Users", icon: Users },
+  { key: "trainers", label: "Active Trainers", icon: UserRound },
+  { key: "programs", label: "Active Programs", icon: Dumbbell },
+  { key: "slots", label: "Open Slots", icon: CalendarClock },
+] as const;
 
-  const viewSections = [
-    {
-      id: 'view-trainers',
-      title: 'View All Trainers',
-      description: 'See all trainers with their schedules, programs, and availability',
-      icon: Eye,
-      route: '/admin/view_trainers',
-      gradient: 'from-purple-500 to-pink-500',
-      stats: 'Complete Overview',
-      emoji: '👥',
-      features: ['Trainer Profiles', 'Schedule Views', 'Program Lists']
-    },
-    {
-      id: 'view-users',
-      title: 'Community Members',
-      description: 'Browse all registered users and their fitness journey',
-      icon: UserCheck,
-      route: '/admin/view_users',
-      gradient: 'from-blue-500 to-cyan-500',
-      stats: 'Member Directory',
-      emoji: '🌟',
-      features: ['User Profiles', 'Activity Stats', 'Membership Status']
-    }
-  ];
+const quickActions = [
+  { label: "Add Program", href: "/admin/programs", icon: Dumbbell },
+  { label: "Add Trainer", href: "/admin/trainers", icon: UserRound },
+  { label: "Create Slots", href: "/admin/slots", icon: Plus },
+  { label: "Manage Bookings", href: "/admin/bookings", icon: CalendarClock },
+];
 
-  const handleNavigation = (route: string) => {
-    navigate(route);
-  };
+const formatDateTime = (value?: string) =>
+  value
+    ? new Date(value).toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "No date";
+
+const profileName = (booking: Booking) => {
+  const name = [booking.profiles?.first_name, booking.profiles?.last_name]
+    .filter(Boolean)
+    .join(" ");
+  return name || booking.profiles?.email || "Unknown user";
+};
+
+export default function AdminDashboard() {
+  const [stats, setStats] = useState({
+    users: 0,
+    trainers: 0,
+    programs: 0,
+    slots: 0,
+  });
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadDashboard = async () => {
+      setLoading(true);
+      const [
+        usersResult,
+        trainersResult,
+        programsResult,
+        slotsResult,
+        bookingsResult,
+      ] = await Promise.all([
+        supabase.from("profiles").select("id", { count: "exact", head: true }),
+        supabase
+          .from("trainers")
+          .select("id", { count: "exact", head: true })
+          .eq("is_active", true),
+        supabase
+          .from("programs")
+          .select("id", { count: "exact", head: true })
+          .eq("is_active", true),
+        supabase
+          .from("slots")
+          .select("id", { count: "exact", head: true })
+          .eq("is_booked", false)
+          .gte("slot_start", new Date().toISOString()),
+        supabase
+          .from("bookings")
+          .select(
+            "id, status, created_at, profiles(email, first_name, last_name), programs(name), slots(slot_start, trainers(first_name, last_name))"
+          )
+          .order("created_at", { ascending: false })
+          .limit(6),
+      ]);
+
+      setStats({
+        users: usersResult.count ?? 0,
+        trainers: trainersResult.count ?? 0,
+        programs: programsResult.count ?? 0,
+        slots: slotsResult.count ?? 0,
+      });
+      setBookings((bookingsResult.data ?? []) as unknown as Booking[]);
+      setLoading(false);
+    };
+
+    loadDashboard();
+  }, []);
+
+  const confirmedBookings = useMemo(
+    () => bookings.filter((booking) => booking.status === "confirmed").length,
+    [bookings]
+  );
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-6xl mx-auto space-y-8">
-        {/* Super Fun Hero Header */}
-        <div className="text-center space-y-6 animate-fade-in">
-          <div className="flex items-center justify-center gap-4">
-            <div>
-              <h1 className="text-6xl font-bold gradient-text animate-pulse-glow">
-                🚀 Fitness Admin Hub 🎯
-              </h1>
-              <p className="text-xl text-muted-foreground mt-2 flex items-center justify-center gap-2">
-                Your <Crown className="w-5 h-5 text-yellow-500" /> command center for fitness excellence <PartyPopper className="w-5 h-5 text-admin" />
-              </p>
+    <div className="min-h-screen bg-secondary/30 p-4 sm:p-6">
+      <div className="mx-auto max-w-7xl space-y-6">
+        <div className="flex flex-col gap-4 rounded-lg border bg-card p-5 md:flex-row md:items-center md:justify-between">
+          <div>
+            <div className="mb-2 flex items-center gap-2 text-sm font-medium text-primary">
+              <LayoutDashboard className="h-4 w-4" />
+              Admin control center
             </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-            <div className="flex items-center justify-center gap-2 p-4 bg-admin/10 rounded-xl hover:scale-105 transition-transform">
-              <Target className="w-5 h-5 text-admin animate-bounce-gentle" />
-              <span className="font-semibold text-admin">Goal Focused</span>
-            </div>
-            <div className="flex items-center justify-center gap-2 p-4 bg-admin2/10 rounded-xl hover:scale-105 transition-transform">
-              <Zap className="w-5 h-5 text-admin2 animate-bounce-gentle" />
-              <span className="font-semibold text-admin2">High Energy</span>
-            </div>
-            <div className="flex items-center justify-center gap-2 p-4 bg-secondary/10 rounded-xl hover:scale-105 transition-transform">
-              <Award className="w-5 h-5 text-secondary-foreground animate-bounce-gentle" />
-              <span className="font-semibold text-secondary-foreground">Elite Quality</span>
-            </div>
-            <div className="flex items-center justify-center gap-2 p-4 bg-pink-100 rounded-xl hover:scale-105 transition-transform">
-              <Heart className="w-5 h-5 text-pink-600 animate-bounce-gentle" />
-              <span className="font-semibold text-pink-600">Made with ❤️</span>
-            </div>
-          </div>
-
-          {/* Fun Motivational Quote */}
-          <div className="bg-gradient-to-r from-admin/10 to-admin2/10 rounded-2xl p-6 max-w-2xl mx-auto">
-            <div className="flex items-center justify-center gap-3 mb-2">
-              <Coffee className="w-6 h-6 text-admin" />
-              <Music className="w-6 h-6 text-admin2" />
-            </div>
-            <p className="text-lg font-medium text-center">
-              "The best project you'll ever work on is <span className="gradient-text font-bold">YOU</span>!"
-            </p>
-            <p className="text-sm text-muted-foreground text-center mt-1">
-              - Your Fitness Admin Dashboard 💪
+            <h1 className="text-3xl font-bold">ReserveFit Admin</h1>
+            <p className="mt-2 max-w-2xl text-muted-foreground">
+              Signed-in users with the email admin@admin.com can manage programs,
+              trainers, available sessions, users, and bookings.
             </p>
           </div>
+          <Button asChild>
+            <Link to="/admin/bookings">View Bookings</Link>
+          </Button>
         </div>
 
-        {/* Management Sections */}
-        <div>
-          <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold gradient-text mb-2">🛠️ Management Tools</h2>
-            <p className="text-muted-foreground">Create, edit, and manage your fitness empire!</p>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {adminSections.map((section, index) => (
-            <Card 
-              key={section.id} 
-              className="fitness-card group hover:shadow-[var(--shadow-admin)] transition-all duration-500 hover:scale-105 hover:rotate-1 animate-slide-up"
-              style={{ animationDelay: `${index * 150}ms` }}
-            >
-              <CardHeader className="text-center space-y-4">
-                <div className={`mx-auto p-4 rounded-2xl bg-gradient-to-br ${section.gradient} shadow-lg group-hover:shadow-[var(--shadow-glow)] transition-all duration-300`}>
-                  <section.icon className="w-8 h-8 text-white" />
-                </div>
-                
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {statsConfig.map((item) => (
+            <Card key={item.key}>
+              <CardContent className="flex items-center justify-between p-5">
                 <div>
-                  <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2">
-                    {section.title}
-                    <span className="text-2xl animate-bounce-gentle">{section.emoji}</span>
-                  </CardTitle>
-                  <CardDescription className="text-base mt-2">
-                    {section.description}
-                  </CardDescription>
+                  <p className="text-sm text-muted-foreground">{item.label}</p>
+                  <p className="mt-2 text-3xl font-bold">
+                    {loading ? "-" : stats[item.key]}
+                  </p>
                 </div>
-
-                <Badge variant="secondary" className="mx-auto">
-                  <Star className="w-3 h-3 mr-1" />
-                  {section.stats}
-                </Badge>
-              </CardHeader>
-
-              <CardContent className="space-y-6">
-                {/* Features List */}
-                <div className="space-y-2">
-                  {section.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-sm">
-                      <div className="w-2 h-2 rounded-full bg-admin" />
-                      <span className="text-muted-foreground">{feature}</span>
-                    </div>
-                  ))}
+                <div className="rounded-md bg-primary/10 p-3 text-primary">
+                  <item.icon className="h-6 w-6" />
                 </div>
-
-                {/* Action Button */}
-                <Button
-                  onClick={() => handleNavigation(section.route)}
-                  className="w-full h-12 text-lg font-bold bg-admin text-admin-foreground border-2 border-admin-yellow hover:bg-admin-light hover:text-admin-foreground transition"
-                >
-                  <span>Manage {section.title.split(' ')[0]}</span>
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
               </CardContent>
             </Card>
           ))}
-          </div>
         </div>
 
-        {/* View Sections */}
-        <div>
-          <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold gradient-text mb-2">👀 Overview Dashboard</h2>
-            <p className="text-muted-foreground">Get the complete picture of your fitness community!</p>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {viewSections.map((section, index) => (
-              <Card 
-                key={section.id} 
-                className="fitness-card group hover:shadow-[var(--shadow-glow)] transition-all duration-500 hover:scale-105 hover:-rotate-1 animate-slide-up"
-                style={{ animationDelay: `${(index + 3) * 150}ms` }}
-              >
-                <CardHeader className="text-center space-y-4">
-                  <div className={`mx-auto p-4 rounded-2xl bg-gradient-to-br ${section.gradient} shadow-lg group-hover:shadow-[var(--shadow-glow)] transition-all duration-300 group-hover:animate-bounce-gentle`}>
-                    <section.icon className="w-8 h-8 text-white" />
-                  </div>
-                  
-                  <div>
-                    <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2">
-                      {section.title}
-                      <span className="text-2xl animate-bounce-gentle">{section.emoji}</span>
-                    </CardTitle>
-                    <CardDescription className="text-base mt-2">
-                      {section.description}
-                    </CardDescription>
-                  </div>
-
-                  <Badge variant="secondary" className="mx-auto">
-                    <Star className="w-3 h-3 mr-1" />
-                    {section.stats}
-                  </Badge>
-                </CardHeader>
-
-                <CardContent className="space-y-6">
-                  {/* Features List */}
-                  <div className="space-y-2">
-                    {section.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-sm">
-                        <div className="w-2 h-2 rounded-full bg-admin animate-pulse-glow" />
-                        <span className="text-muted-foreground">{feature}</span>
+        <div className="grid gap-6 lg:grid-cols-[1fr_420px]">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                Recent bookings
+                <Badge variant="secondary">{confirmedBookings} confirmed</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {loading ? (
+                <p className="text-sm text-muted-foreground">Loading bookings...</p>
+              ) : bookings.length ? (
+                bookings.map((booking) => {
+                  const trainer = booking.slots?.trainers;
+                  return (
+                    <div
+                      key={booking.id}
+                      className="flex flex-col gap-2 rounded-md border p-4 md:flex-row md:items-center md:justify-between"
+                    >
+                      <div>
+                        <div className="font-semibold">{profileName(booking)}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {booking.programs?.name ?? "Training session"} with{" "}
+                          {trainer
+                            ? `${trainer.first_name} ${trainer.last_name}`
+                            : "unassigned trainer"}
+                        </div>
                       </div>
-                    ))}
-                  </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge>{booking.status}</Badge>
+                        <span className="text-sm text-muted-foreground">
+                          {formatDateTime(booking.slots?.slot_start)}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="text-sm text-muted-foreground">No bookings yet.</p>
+              )}
+            </CardContent>
+          </Card>
 
-                  {/* Action Button */}
-                  <Button
-                    onClick={() => handleNavigation(section.route)}
-                  className="w-full h-12 text-lg font-bold bg-admin text-admin-foreground border-2 border-admin-yellow hover:bg-admin-light hover:text-admin-foreground transition"
-                  >
-                    <span>Explore {section.title.split(' ')[0]}</span>
-                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* Super Fun Quick Stats Dashboard */}
-        <Card className="fitness-card animate-fade-in bg-gradient-to-br from-admin/5 to-admin2/5">
-          <CardHeader>
-            <CardTitle className="text-center flex items-center justify-center gap-2">
-              <TrendingUp className="w-6 h-6 text-admin animate-bounce-gentle" />
-              🎉 Epic Dashboard Overview 🎉
-              <Timer className="w-6 h-6 text-admin2 animate-bounce-gentle" />
-            </CardTitle>
-          </CardHeader>
-          
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center space-y-3 p-4 bg-admin/10 rounded-xl hover:scale-105 transition-transform">
-                <div className="p-3 rounded-full bg-admin/20 w-fit mx-auto animate-bounce-gentle">
-                  <Dumbbell className="w-6 h-6 text-admin" />
-                </div>
-                <div className="font-bold text-3xl gradient-text">Programs 💪</div>
-                <div className="text-sm text-muted-foreground">Create unlimited fitness programs with custom intensity levels and beautiful icons</div>
-              </div>
-              
-              <div className="text-center space-y-3 p-4 bg-admin2/10 rounded-xl hover:scale-105 transition-transform">
-                <div className="p-3 rounded-full bg-admin2/20 w-fit mx-auto animate-bounce-gentle">
-                  <Users className="w-6 h-6 text-admin2" />
-                </div>
-                <div className="font-bold text-3xl" style={{ color: 'hsl(var(--admin2))' }}>Trainers 🏋️‍♂️</div>
-                <div className="text-sm text-muted-foreground">Manage professional profiles, ratings, and availability for your fitness team</div>
-              </div>
-              
-              <div className="text-center space-y-3 p-4 bg-secondary/10 rounded-xl hover:scale-105 transition-transform">
-                <div className="p-3 rounded-full bg-secondary/20 w-fit mx-auto animate-bounce-gentle">
-                  <Calendar className="w-6 h-6 text-secondary-foreground" />
-                </div>
-                <div className="font-bold text-3xl text-secondary-foreground">Schedules ⏰</div>
-                <div className="text-sm text-muted-foreground">Organize time slots and sessions to maximize trainer-client connections</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Super Motivational Footer */}
-        <div className="text-center space-y-6 animate-fade-in">
-          <div className="flex items-center justify-center gap-2 text-xl">
-            <span>Building the future of fitness</span>
-            <span className="text-admin animate-bounce-gentle text-3xl">🚀</span>
-            <span>one admin at a time</span>
-          </div>
-          <div className="bg-gradient-to-r from-admin/20 to-admin2/20 rounded-2xl p-6 max-w-3xl mx-auto">
-            <p className="text-lg font-medium text-center mb-2">
-              🌟 "Success is the sum of small efforts repeated day in and day out" 🌟
-            </p>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Welcome to your fitness administration center. Each section is designed to help you create 
-              an exceptional fitness experience for your clients and trainers. Let's make fitness fun! 💪
-            </p>
-            <div className="flex items-center justify-center gap-4 mt-4">
-              <PartyPopper className="w-6 h-6 text-admin animate-bounce-gentle" />
-              <Heart className="w-6 h-6 text-pink-500 animate-bounce-gentle" />
-              <Crown className="w-6 h-6 text-yellow-500 animate-bounce-gentle" />
-            </div>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Quick actions</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-3">
+              {quickActions.map((action) => (
+                <Button key={action.href} asChild variant="outline" className="justify-start">
+                  <Link to={action.href}>
+                    <action.icon className="mr-2 h-4 w-4" />
+                    {action.label}
+                  </Link>
+                </Button>
+              ))}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
   );
-};
-
-export default AdminDashboard;
+}

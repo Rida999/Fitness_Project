@@ -51,6 +51,7 @@ export default function BookingSection() {
     supabase
       .from("programs")
       .select("id, name")
+      .eq("is_active", true)
       .order("name")
       .then(({ data, error }) => {
         if (error) console.error("Failed to load programs:", error);

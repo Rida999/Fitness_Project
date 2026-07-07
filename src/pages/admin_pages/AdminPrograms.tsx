@@ -1,300 +1,368 @@
-// src/pages/admin_pages/AdminPrograms.tsx
-import React, { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Dumbbell,
-  Timer,
-  Zap,
-  Sparkles,
-  Plus,
-  CheckCircle,
-  Clock,
-  Activity,
-  Target,
-} from "lucide-react";
+import { Activity, Dumbbell, Pencil, Plus, RefreshCw, Save, Search, X } from "lucide-react";
 
-type IntensityOption = {
-  value: string;
-  label: string;
-  color: string;
-  icon: string;
-};
-type IconOption = {
-  value: string;
-  label: string;
-  icon: string;
+type Program = {
+  id: string;
+  name: string;
+  description: string | null;
+  duration_min: number | null;
+  duration_max: number | null;
+  intensity: string;
+  icon: string | null;
+  features: string[] | null;
+  is_active?: boolean;
 };
 
-const intensityOptions: IntensityOption[] = [
-  { value: "low", label: "Low", color: "bg-green-500", icon: "🟢" },
-  { value: "medium", label: "Medium", color: "bg-yellow-500", icon: "🟡" },
-  { value: "high", label: "High", color: "bg-orange-500", icon: "🟠" },
-  { value: "extreme", label: "Extreme", color: "bg-red-500", icon: "🔴" },
-];
+const emptyForm = {
+  name: "",
+  description: "",
+  duration_min: "",
+  duration_max: "",
+  intensity: "medium",
+  icon: "dumbbell",
+  features: "",
+  is_active: true,
+};
 
-const iconOptions: IconOption[] = [
-  { value: "dumbbell", label: "Dumbbell", icon: "🏋️" },
-  { value: "running", label: "Running", icon: "🏃" },
-  { value: "yoga", label: "Yoga", icon: "🧘" },
-  { value: "boxing", label: "Boxing", icon: "🥊" },
-  { value: "cycling", label: "Cycling", icon: "🚴" },
-  { value: "swimming", label: "Swimming", icon: "🏊" },
-];
+const intensityOptions = ["low", "medium", "high", "extreme"];
+const iconOptions = ["dumbbell", "running", "yoga", "boxing", "cycling", "swimming"];
 
-const AdminPrograms: React.FC = () => {
-  const [form, setForm] = useState({
-    name: "",
-    description: "",
-    duration_min: "",
-    duration_max: "",
-    intensity: "",
-    icon: "",
-  });
-  const [isLoading, setIsLoading] = useState(false);
+export default function AdminPrograms() {
   const { toast } = useToast();
+  const [programs, setPrograms] = useState<Program[]>([]);
+  const [form, setForm] = useState(emptyForm);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const loadPrograms = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("programs")
+      .select("id, name, description, duration_min, duration_max, intensity, icon, features, is_active")
+      .order("name");
 
-    try {
-      const payload = {
-        ...form,
-        duration_min: form.duration_min ? Number(form.duration_min) : null,
-        duration_max: form.duration_max ? Number(form.duration_max) : null,
-      };
-      const { error } = await supabase.from("programs").insert(payload);
-      if (error) throw error;
-
+    if (error) {
       toast({
-        title: "🎉 Program Added Successfully!",
-        description: `${form.name} has been added to your fitness programs.`,
-        className: "border-green-200 bg-green-50 text-green-800",
-      });
-      setForm({
-        name: "",
-        description: "",
-        duration_min: "",
-        duration_max: "",
-        intensity: "",
-        icon: "",
-      });
-    } catch (err: any) {
-      toast({
-        title: "❌ Network Error",
-        description: err.message || "Could not create the program.",
+        title: "Could not load programs",
+        description: error.message,
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
+    } else {
+      setPrograms((data ?? []) as Program[]);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadPrograms();
+  }, []);
+
+  const filteredPrograms = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) return programs;
+    return programs.filter((program) =>
+      `${program.name} ${program.description ?? ""} ${program.intensity}`
+        .toLowerCase()
+        .includes(normalized)
+    );
+  }, [programs, query]);
+
+  const resetForm = () => {
+    setForm(emptyForm);
+    setEditingId(null);
+  };
+
+  const editProgram = (program: Program) => {
+    setEditingId(program.id);
+    setForm({
+      name: program.name,
+      description: program.description ?? "",
+      duration_min: program.duration_min?.toString() ?? "",
+      duration_max: program.duration_max?.toString() ?? "",
+      intensity: program.intensity || "medium",
+      icon: program.icon || "dumbbell",
+      features: (program.features ?? []).join(", "),
+      is_active: program.is_active ?? true,
+    });
+  };
+
+  const buildPayload = () => ({
+    name: form.name.trim(),
+    description: form.description.trim() || null,
+    duration_min: form.duration_min ? Number(form.duration_min) : null,
+    duration_max: form.duration_max ? Number(form.duration_max) : null,
+    intensity: form.intensity,
+    icon: form.icon,
+    features: form.features
+      .split(",")
+      .map((feature) => feature.trim())
+      .filter(Boolean),
+    is_active: form.is_active,
+  });
+
+  const saveProgram = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setSaving(true);
+
+    const payload = buildPayload();
+    const request = editingId
+      ? supabase.from("programs").update(payload).eq("id", editingId)
+      : supabase.from("programs").insert(payload);
+    const { error } = await request;
+
+    if (error) {
+      toast({
+        title: editingId ? "Could not update program" : "Could not create program",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: editingId ? "Program updated" : "Program created",
+        description: `${payload.name} is ready for booking.`,
+      });
+      resetForm();
+      await loadPrograms();
+    }
+    setSaving(false);
+  };
+
+  const toggleProgram = async (program: Program) => {
+    const nextActive = !(program.is_active ?? true);
+    const { error } = await supabase
+      .from("programs")
+      .update({ is_active: nextActive })
+      .eq("id", program.id);
+
+    if (error) {
+      toast({
+        title: "Could not update program status",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      setPrograms((items) =>
+        items.map((item) =>
+          item.id === program.id ? { ...item, is_active: nextActive } : item
+        )
+      );
     }
   };
 
-  const selectedIntensity = intensityOptions.find(
-    (opt) => opt.value === form.intensity
-  );
-  const selectedIcon = iconOptions.find((opt) => opt.value === form.icon);
-
   return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-2xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="text-center space-y-4 animate-fade-in">
-          <div className="flex items-center justify-center gap-3">
-            <div className="p-3 rounded-full bg-gradient-to-br from-admin to-admin-glow shadow-[var(--shadow-glow)]">
-              <Dumbbell className="w-8 h-8 text-admin-foreground" />
-            </div>
-            <h1 className="text-4xl font-bold gradient-text">
-              Fitness Program Creator
-            </h1>
-            <Sparkles className="w-8 h-8 text-admin2 animate-pulse-glow" />
-          </div>
-          <p className="text-muted-foreground text-lg">
-            Create amazing workout programs that inspire and motivate! 💪
-          </p>
-        </div>
-
-        {/* Form */}
-        <Card className="fitness-card animate-slide-up">
-          <CardHeader className="text-center">
-            <CardTitle className="flex items-center gap-2 justify-center text-2xl">
-              <Plus className="w-6 h-6 text-admin" />
-              Add New Program
+    <div className="min-h-screen bg-secondary/30 p-4 sm:p-6">
+      <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[420px_1fr]">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              {editingId ? <Pencil className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+              {editingId ? "Edit Program" : "Add Program"}
             </CardTitle>
-            <CardDescription>Fill in the details to create an awesome fitness program ✨</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Name */}
+            <form onSubmit={saveProgram} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name" className="flex items-center gap-2">
-                  <Target className="w-4 h-4 text-admin" /> Program Name
-                </Label>
+                <Label htmlFor="name">Program name</Label>
                 <Input
                   id="name"
-                  placeholder="e.g., Morning Energy Boost 🌅"
                   value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  onChange={(event) => setForm({ ...form, name: event.target.value })}
                   required
                 />
               </div>
-              {/* Description */}
+
               <div className="space-y-2">
-                <Label htmlFor="description" className="flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-admin" /> Description
-                </Label>
+                <Label htmlFor="description">Description</Label>
                 <Textarea
                   id="description"
-                  placeholder="Describe what makes this program special... 🚀"
+                  rows={4}
                   value={form.description}
-                  onChange={(e) =>
-                    setForm({ ...form, description: e.target.value })
-                  }
-                  rows={3}
+                  onChange={(event) => setForm({ ...form, description: event.target.value })}
                 />
               </div>
-              {/* Duration */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+              <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label htmlFor="duration_min" className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-admin" /> Min (mins)
-                  </Label>
+                  <Label htmlFor="duration_min">Min minutes</Label>
                   <Input
                     id="duration_min"
-                    type="number"
-                    placeholder="15"
-                    value={form.duration_min}
-                    onChange={(e) =>
-                      setForm({ ...form, duration_min: e.target.value })
-                    }
                     min={1}
+                    type="number"
+                    value={form.duration_min}
+                    onChange={(event) => setForm({ ...form, duration_min: event.target.value })}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="duration_max" className="flex items-center gap-2">
-                    <Timer className="w-4 h-4 text-admin" /> Max (mins)
-                  </Label>
+                  <Label htmlFor="duration_max">Max minutes</Label>
                   <Input
                     id="duration_max"
-                    type="number"
-                    placeholder="45"
-                    value={form.duration_max}
-                    onChange={(e) =>
-                      setForm({ ...form, duration_max: e.target.value })
-                    }
                     min={1}
+                    type="number"
+                    value={form.duration_max}
+                    onChange={(event) => setForm({ ...form, duration_max: event.target.value })}
                   />
                 </div>
               </div>
-              {/* Intensity */}
-              <div className="space-y-3">
-                <Label className="flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-admin" /> Intensity Level
-                </Label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {intensityOptions.map((opt) => (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() =>
-                        setForm({ ...form, intensity: opt.value })
-                      }
-                      className={`p-3 rounded-xl border-2 transition ${
-                        form.intensity === opt.value
-                          ? "border-admin bg-admin/10 shadow-[var(--shadow-admin)]"
-                          : "border-border bg-card"
-                      }`}
-                    >
-                      <div className="text-2xl mb-1">{opt.icon}</div>
-                      <div className="text-sm">{opt.label}</div>
-                    </button>
-                  ))}
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor="intensity">Intensity</Label>
+                  <select
+                    id="intensity"
+                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                    value={form.intensity}
+                    onChange={(event) => setForm({ ...form, intensity: event.target.value })}
+                  >
+                    {intensityOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                {selectedIntensity && (
-                  <Badge className="mx-auto">
-                    Selected: {selectedIntensity.icon}{" "}
-                    {selectedIntensity.label}
-                  </Badge>
-                )}
-              </div>
-              {/* Icon */}
-              <div className="space-y-3">
-                <Label className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-admin" /> Program Icon
-                </Label>
-                <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-                  {iconOptions.map((opt) => (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() =>
-                        setForm({ ...form, icon: opt.value })
-                      }
-                      className={`p-3 rounded-xl border-2 transition ${
-                        form.icon === opt.value
-                          ? "border-admin bg-admin/10 shadow-[var(--shadow-admin)]"
-                          : "border-border bg-card"
-                      }`}
-                    >
-                      <div className="text-2xl mb-1">{opt.icon}</div>
-                      <div className="text-xs">{opt.label}</div>
-                    </button>
-                  ))}
+                <div className="space-y-2">
+                  <Label htmlFor="icon">Icon type</Label>
+                  <select
+                    id="icon"
+                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                    value={form.icon}
+                    onChange={(event) => setForm({ ...form, icon: event.target.value })}
+                  >
+                    {iconOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                {selectedIcon && (
-                  <Badge className="mx-auto">
-                    Selected: {selectedIcon.icon} {selectedIcon.label}
-                  </Badge>
-                )}
               </div>
-              {/* Submit */}
-              <div className="pt-4">
-                <Button
-                  type="submit"
-                  disabled={isLoading || !form.name}
-                  className="w-full flex items-center justify-center gap-2"
-                >
-                  {isLoading ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-5 h-5 border-2 border-admin-foreground/30 border-t-admin-foreground rounded-full animate-spin" />
-                      Creating Magic...
-                    </div>
-                  ) : (
-                    <>
-                      <CheckCircle className="w-5 h-5" />
-                      Create Awesome Program! 🚀
-                    </>
-                  )}
+
+              <div className="space-y-2">
+                <Label htmlFor="features">Features</Label>
+                <Input
+                  id="features"
+                  placeholder="Form coaching, Nutrition tips, Weekly goals"
+                  value={form.features}
+                  onChange={(event) => setForm({ ...form, features: event.target.value })}
+                />
+              </div>
+
+              <div className="flex items-center justify-between rounded-md border p-3">
+                <div>
+                  <Label htmlFor="is_active">Visible to users</Label>
+                  <p className="text-sm text-muted-foreground">Turn off to hide without deleting.</p>
+                </div>
+                <Switch
+                  id="is_active"
+                  checked={form.is_active}
+                  onCheckedChange={(checked) => setForm({ ...form, is_active: checked })}
+                />
+              </div>
+
+              <div className="flex gap-2">
+                <Button type="submit" disabled={saving || !form.name.trim()} className="flex-1">
+                  <Save className="mr-2 h-4 w-4" />
+                  {saving ? "Saving..." : editingId ? "Save Changes" : "Create Program"}
                 </Button>
+                {editingId && (
+                  <Button type="button" variant="outline" onClick={resetForm}>
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
             </form>
           </CardContent>
         </Card>
 
-        {/* Footer */}
-        <div className="text-center text-muted-foreground animate-fade-in">
-          <p className="flex items-center justify-center gap-2">
-            Made with{" "}
-            <span className="text-red-500 animate-bounce-gentle">❤️</span> for
-            fitness enthusiasts
-          </p>
+        <div className="space-y-4">
+          <div className="flex flex-col gap-3 rounded-lg border bg-card p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">Programs</h1>
+              <p className="text-sm text-muted-foreground">
+                Manage what users can choose during booking.
+              </p>
+            </div>
+            <Button variant="outline" onClick={loadPrograms}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Refresh
+            </Button>
+          </div>
+
+          <div className="relative">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Input
+              className="pl-9"
+              placeholder="Search programs"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          </div>
+
+          <div className="grid gap-4">
+            {loading ? (
+              <Card>
+                <CardContent className="p-6 text-muted-foreground">Loading programs...</CardContent>
+              </Card>
+            ) : filteredPrograms.length ? (
+              filteredPrograms.map((program) => (
+                <Card key={program.id}>
+                  <CardContent className="p-5">
+                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                      <div className="space-y-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Dumbbell className="h-5 w-5 text-primary" />
+                          <h2 className="text-xl font-semibold">{program.name}</h2>
+                          <Badge variant={(program.is_active ?? true) ? "default" : "secondary"}>
+                            {(program.is_active ?? true) ? "Active" : "Hidden"}
+                          </Badge>
+                          <Badge variant="outline">{program.intensity}</Badge>
+                        </div>
+                        <p className="max-w-2xl text-sm text-muted-foreground">
+                          {program.description || "No description yet."}
+                        </p>
+                        <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+                          <span>{program.duration_min ?? "-"}-{program.duration_max ?? "-"} min</span>
+                          {(program.features ?? []).map((feature) => (
+                            <Badge key={feature} variant="secondary">
+                              <Activity className="mr-1 h-3 w-3" />
+                              {feature}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => editProgram(program)}>
+                          <Pencil className="mr-2 h-4 w-4" />
+                          Edit
+                        </Button>
+                        <Button variant="outline" onClick={() => toggleProgram(program)}>
+                          {(program.is_active ?? true) ? "Hide" : "Activate"}
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <Card>
+                <CardContent className="p-6 text-muted-foreground">No programs found.</CardContent>
+              </Card>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default AdminPrograms;
+}

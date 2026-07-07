@@ -1,346 +1,388 @@
-// src/pages/admin_pages/AdminTrainers.tsx
-import React, { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Users,
-  Star,
-  User,
-  Camera,
-  Briefcase,
-  FileText,
-  Calendar,
-  TrendingUp,
-  CheckCircle,
-  Sparkles,
-  Heart,
-  Award,
-  UserPlus,
-} from "lucide-react";
+import { Calendar, Pencil, Plus, RefreshCw, Save, Search, Star, UserRound, X } from "lucide-react";
 
-const AdminTrainers: React.FC = () => {
+type Trainer = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  photo_url: string | null;
+  headline: string | null;
+  bio: string | null;
+  rating: number;
+  clients_count: number;
+  start_date: string | null;
+  is_active: boolean;
+};
+
+const emptyForm = {
+  first_name: "",
+  last_name: "",
+  photo_url: "",
+  headline: "",
+  bio: "",
+  rating: "5.0",
+  clients_count: "0",
+  start_date: "",
+  is_active: true,
+};
+
+const initialsFor = (trainer: Pick<Trainer, "first_name" | "last_name">) =>
+  `${trainer.first_name?.[0] ?? ""}${trainer.last_name?.[0] ?? ""}`.toUpperCase() || "TR";
+
+export default function AdminTrainers() {
   const { toast } = useToast();
-  const [form, setForm] = useState({
-    first_name: "",
-    last_name: "",
-    photo_url: "",
-    headline: "",
-    bio: "",
-    rating: "",
-    clients_count: "",
-    start_date: "",
-    is_active: true,
-  });
-  const [isLoading, setIsLoading] = useState(false);
+  const [trainers, setTrainers] = useState<Trainer[]>([]);
+  const [form, setForm] = useState(emptyForm);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  // Display stars/half stars based on rating
-  const getRatingDisplay = () => {
-    const r = parseFloat(form.rating);
-    if (isNaN(r) || r <= 0) return "";
-    const full = Math.floor(r);
-    const half = r % 1 >= 0.5;
-    return "⭐".repeat(full) + (half ? "✨" : "");
-  };
+  const loadTrainers = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("trainers")
+      .select("id, first_name, last_name, photo_url, headline, bio, rating, clients_count, start_date, is_active")
+      .order("first_name");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    try {
-      const payload = {
-        ...form,
-        rating: form.rating ? parseFloat(form.rating) : undefined,
-        clients_count: form.clients_count ? parseInt(form.clients_count, 10) : undefined,
-        start_date: form.start_date || null,
-      };
-      const { error } = await supabase.from("trainers").insert(payload);
-      if (error) throw error;
-
+    if (error) {
       toast({
-        title: "🎉 Trainer Added Successfully!",
-        description: `${form.first_name} ${form.last_name} is now part of your amazing team!`,
-        className: "border-green-200 bg-green-50 text-green-800",
-      });
-      setForm({
-        first_name: "",
-        last_name: "",
-        photo_url: "",
-        headline: "",
-        bio: "",
-        rating: "",
-        clients_count: "",
-        start_date: "",
-        is_active: true,
-      });
-    } catch (err: any) {
-      toast({
-        title: "❌ Network Error",
-        description: err.message || "Could not create the trainer.",
+        title: "Could not load trainers",
+        description: error.message,
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
+    } else {
+      setTrainers((data ?? []) as Trainer[]);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadTrainers();
+  }, []);
+
+  const filteredTrainers = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) return trainers;
+    return trainers.filter((trainer) =>
+      `${trainer.first_name} ${trainer.last_name} ${trainer.headline ?? ""}`
+        .toLowerCase()
+        .includes(normalized)
+    );
+  }, [trainers, query]);
+
+  const resetForm = () => {
+    setForm(emptyForm);
+    setEditingId(null);
+  };
+
+  const editTrainer = (trainer: Trainer) => {
+    setEditingId(trainer.id);
+    setForm({
+      first_name: trainer.first_name,
+      last_name: trainer.last_name,
+      photo_url: trainer.photo_url ?? "",
+      headline: trainer.headline ?? "",
+      bio: trainer.bio ?? "",
+      rating: trainer.rating?.toString() ?? "5.0",
+      clients_count: trainer.clients_count?.toString() ?? "0",
+      start_date: trainer.start_date ?? "",
+      is_active: trainer.is_active,
+    });
+  };
+
+  const buildPayload = () => ({
+    first_name: form.first_name.trim(),
+    last_name: form.last_name.trim(),
+    photo_url: form.photo_url.trim() || null,
+    headline: form.headline.trim() || null,
+    bio: form.bio.trim() || null,
+    rating: form.rating ? Number(form.rating) : 5,
+    clients_count: form.clients_count ? Number(form.clients_count) : 0,
+    start_date: form.start_date || null,
+    is_active: form.is_active,
+  });
+
+  const saveTrainer = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setSaving(true);
+
+    const payload = buildPayload();
+    const request = editingId
+      ? supabase.from("trainers").update(payload).eq("id", editingId)
+      : supabase.from("trainers").insert(payload);
+    const { error } = await request;
+
+    if (error) {
+      toast({
+        title: editingId ? "Could not update trainer" : "Could not create trainer",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: editingId ? "Trainer updated" : "Trainer created",
+        description: `${payload.first_name} ${payload.last_name} is saved.`,
+      });
+      resetForm();
+      await loadTrainers();
+    }
+    setSaving(false);
+  };
+
+  const toggleTrainer = async (trainer: Trainer) => {
+    const nextActive = !trainer.is_active;
+    const { error } = await supabase
+      .from("trainers")
+      .update({ is_active: nextActive })
+      .eq("id", trainer.id);
+
+    if (error) {
+      toast({
+        title: "Could not update trainer status",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      setTrainers((items) =>
+        items.map((item) =>
+          item.id === trainer.id ? { ...item, is_active: nextActive } : item
+        )
+      );
     }
   };
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-2xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="text-center space-y-4 animate-fade-in">
-          <div className="flex items-center justify-center gap-3">
-            <div className="p-3 rounded-full bg-gradient-to-br from-admin to-admin-glow shadow-[var(--shadow-glow)]">
-              <Users className="w-8 h-8 text-admin-foreground" />
-            </div>
-            <h1 className="text-4xl font-bold gradient-text">
-              Trainer Management
-            </h1>
-            <Sparkles className="w-8 h-8 text-admin2 animate-pulse-glow" />
-          </div>
-          <p className="text-muted-foreground text-lg">
-            Add amazing trainers to your fitness team! 🏋️‍♂️
-          </p>
-        </div>
-
-        {/* Form */}
-        <Card className="fitness-card animate-slide-up">
-          <CardHeader className="text-center">
-            <CardTitle className="flex items-center gap-2 justify-center text-2xl">
-              <UserPlus className="w-6 h-6 text-admin" />
-              Add New Trainer
+    <div className="min-h-screen bg-secondary/30 p-4 sm:p-6">
+      <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[420px_1fr]">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              {editingId ? <Pencil className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+              {editingId ? "Edit Trainer" : "Add Trainer"}
             </CardTitle>
-            <CardDescription className="text-base">
-              Build your dream team of fitness professionals ✨
-            </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Name */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {["first_name", "last_name"].map((field, idx) => (
-                  <div key={field} className="space-y-2">
-                    <Label htmlFor={field} className="flex items-center gap-2">
-                      <User className="w-4 h-4 text-admin" />
-                      {field === "first_name" ? "First Name" : "Last Name"}
-                    </Label>
-                    <Input
-                      id={field}
-                      placeholder={
-                        field === "first_name" ? "e.g., Alex 💪" : "e.g., Johnson 🚀"
-                      }
-                      value={(form as any)[field]}
-                      onChange={(e) =>
-                        setForm((f) => ({
-                          ...f,
-                          [field]: e.target.value,
-                        }))
-                      }
-                      required
-                    />
-                  </div>
-                ))}
+            <form onSubmit={saveTrainer} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor="first_name">First name</Label>
+                  <Input
+                    id="first_name"
+                    value={form.first_name}
+                    onChange={(event) => setForm({ ...form, first_name: event.target.value })}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="last_name">Last name</Label>
+                  <Input
+                    id="last_name"
+                    value={form.last_name}
+                    onChange={(event) => setForm({ ...form, last_name: event.target.value })}
+                    required
+                  />
+                </div>
               </div>
 
-              {/* Photo URL */}
               <div className="space-y-2">
-                <Label htmlFor="photo_url" className="flex items-center gap-2">
-                  <Camera className="w-4 h-4 text-admin" />
-                  Profile Photo URL
-                </Label>
+                <Label htmlFor="photo_url">Photo URL</Label>
                 <Input
                   id="photo_url"
                   type="url"
-                  placeholder="https://...trainer.jpg 📸"
                   value={form.photo_url}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, photo_url: e.target.value }))
-                  }
+                  onChange={(event) => setForm({ ...form, photo_url: event.target.value })}
                 />
-                {form.photo_url && (
-                  <div className="mt-2 p-2 bg-muted rounded-lg">
-                    <img
-                      src={form.photo_url}
-                      alt="Trainer preview"
-                      className="w-16 h-16 rounded-full mx-auto object-cover"
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                      }}
-                    />
-                  </div>
-                )}
               </div>
 
-              {/* Headline & Bio */}
               <div className="space-y-2">
-                <Label htmlFor="headline" className="flex items-center gap-2">
-                  <Briefcase className="w-4 h-4 text-admin" />
-                  Professional Headline
-                </Label>
+                <Label htmlFor="headline">Specialty headline</Label>
                 <Input
                   id="headline"
-                  placeholder="Certified Personal Trainer & Nutrition Expert 🏆"
                   value={form.headline}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, headline: e.target.value }))
-                  }
+                  onChange={(event) => setForm({ ...form, headline: event.target.value })}
                 />
               </div>
+
               <div className="space-y-2">
-                <Label htmlFor="bio" className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-admin" />
-                  Biography
-                </Label>
+                <Label htmlFor="bio">Bio</Label>
                 <Textarea
                   id="bio"
                   rows={4}
-                  placeholder="Background, specialties, passion... 🌟"
                   value={form.bio}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, bio: e.target.value }))
-                  }
+                  onChange={(event) => setForm({ ...form, bio: event.target.value })}
                 />
               </div>
 
-              {/* Rating, Clients, Start Date */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-2">
-                  <Label htmlFor="rating" className="flex items-center gap-2">
-                    <Star className="w-4 h-4 text-admin" />
-                    Rating
-                  </Label>
+                  <Label htmlFor="rating">Rating</Label>
                   <Input
                     id="rating"
                     type="number"
-                    step="0.1"
                     min="0"
                     max="5"
-                    placeholder="4.8"
+                    step="0.1"
                     value={form.rating}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, rating: e.target.value }))
-                    }
+                    onChange={(event) => setForm({ ...form, rating: event.target.value })}
                   />
-                  {!!form.rating && (
-                    <div className="text-sm">{getRatingDisplay()}</div>
-                  )}
                 </div>
                 <div className="space-y-2">
-                  <Label
-                    htmlFor="clients_count"
-                    className="flex items-center gap-2"
-                  >
-                    <TrendingUp className="w-4 h-4 text-admin" />
-                    Clients Count
-                  </Label>
+                  <Label htmlFor="clients_count">Clients</Label>
                   <Input
                     id="clients_count"
                     type="number"
                     min="0"
-                    placeholder="150"
                     value={form.clients_count}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, clients_count: e.target.value }))
-                    }
+                    onChange={(event) => setForm({ ...form, clients_count: event.target.value })}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="start_date" className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-admin" />
-                    Start Date
-                  </Label>
+                  <Label htmlFor="start_date">Start date</Label>
                   <Input
                     id="start_date"
                     type="date"
                     value={form.start_date}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, start_date: e.target.value }))
-                    }
+                    onChange={(event) => setForm({ ...form, start_date: event.target.value })}
                   />
                 </div>
               </div>
 
-              {/* Active */}
-              <div className="flex items-center justify-between p-4 bg-muted/50 rounded-xl">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`p-2 rounded-full ${
-                      form.is_active ? "bg-green-100" : "bg-gray-100"
-                    }`}
-                  >
-                    <Heart
-                      className={`w-4 h-4 ${
-                        form.is_active ? "text-green-600" : "text-gray-400"
-                      }`}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="is_active">Active Status</Label>
-                    <p className="text-sm text-muted-foreground">
-                      {form.is_active
-                        ? "Trainer is actively accepting clients"
-                        : "Trainer is currently inactive"}
-                    </p>
-                  </div>
+              <div className="flex items-center justify-between rounded-md border p-3">
+                <div>
+                  <Label htmlFor="is_active">Accepting sessions</Label>
+                  <p className="text-sm text-muted-foreground">Inactive trainers stay in history.</p>
                 </div>
                 <Switch
                   id="is_active"
                   checked={form.is_active}
-                  onCheckedChange={(v) =>
-                    setForm((f) => ({ ...f, is_active: v }))
-                  }
+                  onCheckedChange={(checked) => setForm({ ...form, is_active: checked })}
                 />
               </div>
 
-              {/* Submit */}
-              <div className="pt-4">
+              <div className="flex gap-2">
                 <Button
                   type="submit"
-                  disabled={
-                    isLoading ||
-                    !form.first_name.trim() ||
-                    !form.last_name.trim()
-                  }
-                  className="w-full flex items-center justify-center gap-2"
+                  disabled={saving || !form.first_name.trim() || !form.last_name.trim()}
+                  className="flex-1"
                 >
-                  {isLoading ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-5 h-5 border-2 border-admin-foreground/30 border-t-admin-foreground rounded-full animate-spin" />
-                      Adding to Team...
-                    </div>
-                  ) : (
-                    <>
-                      <Award className="w-5 h-5" />
-                      Add Amazing Trainer! 🌟
-                    </>
-                  )}
+                  <Save className="mr-2 h-4 w-4" />
+                  {saving ? "Saving..." : editingId ? "Save Changes" : "Create Trainer"}
                 </Button>
+                {editingId && (
+                  <Button type="button" variant="outline" onClick={resetForm}>
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
             </form>
           </CardContent>
         </Card>
 
-        {/* Footer */}
-        <div className="text-center text-muted-foreground animate-fade-in">
-          <p className="flex items-center justify-center gap-2">
-            Building the best fitness team{" "}
-            <span className="text-admin animate-bounce-gentle">💪</span> together
-          </p>
+        <div className="space-y-4">
+          <div className="flex flex-col gap-3 rounded-lg border bg-card p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">Trainers</h1>
+              <p className="text-sm text-muted-foreground">
+                Manage coach profiles and who appears to users.
+              </p>
+            </div>
+            <Button variant="outline" onClick={loadTrainers}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Refresh
+            </Button>
+          </div>
+
+          <div className="relative">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Input
+              className="pl-9"
+              placeholder="Search trainers"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          </div>
+
+          <div className="grid gap-4">
+            {loading ? (
+              <Card>
+                <CardContent className="p-6 text-muted-foreground">Loading trainers...</CardContent>
+              </Card>
+            ) : filteredTrainers.length ? (
+              filteredTrainers.map((trainer) => (
+                <Card key={trainer.id}>
+                  <CardContent className="p-5">
+                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                      <div className="flex gap-4">
+                        <Avatar className="h-14 w-14">
+                          <AvatarImage src={trainer.photo_url ?? undefined} />
+                          <AvatarFallback>{initialsFor(trainer)}</AvatarFallback>
+                        </Avatar>
+                        <div className="space-y-2">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h2 className="text-xl font-semibold">
+                              {trainer.first_name} {trainer.last_name}
+                            </h2>
+                            <Badge variant={trainer.is_active ? "default" : "secondary"}>
+                              {trainer.is_active ? "Active" : "Inactive"}
+                            </Badge>
+                          </div>
+                          <p className="text-sm font-medium text-primary">
+                            {trainer.headline || "No headline yet"}
+                          </p>
+                          <p className="max-w-2xl text-sm text-muted-foreground">
+                            {trainer.bio || "No bio yet."}
+                          </p>
+                          <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Star className="h-4 w-4 text-energy" />
+                              {trainer.rating}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <UserRound className="h-4 w-4" />
+                              {trainer.clients_count} clients
+                            </span>
+                            {trainer.start_date && (
+                              <span className="flex items-center gap-1">
+                                <Calendar className="h-4 w-4" />
+                                Since {trainer.start_date}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => editTrainer(trainer)}>
+                          <Pencil className="mr-2 h-4 w-4" />
+                          Edit
+                        </Button>
+                        <Button variant="outline" onClick={() => toggleTrainer(trainer)}>
+                          {trainer.is_active ? "Deactivate" : "Activate"}
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <Card>
+                <CardContent className="p-6 text-muted-foreground">No trainers found.</CardContent>
+              </Card>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default AdminTrainers;
+}

@@ -48,6 +48,7 @@ export default function ProgramsSection() {
         const { data, error } = await supabase
           .from("programs")
           .select("id, name, description, duration_min, duration_max, intensity, icon, features")
+          .eq("is_active", true)
           .order("name");
         if (error) throw error;
 

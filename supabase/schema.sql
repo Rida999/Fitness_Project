@@ -41,12 +41,16 @@ create table if not exists public.programs (
   intensity text not null default 'medium' check (intensity in ('low', 'medium', 'moderate', 'high', 'extreme', 'Variable', 'Medium', 'High', 'Very High')),
   icon text,
   features text[] not null default '{}',
+  is_active boolean not null default true,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   constraint programs_duration_range check (
     duration_min is null or duration_max is null or duration_min <= duration_max
   )
 );
+
+alter table public.programs
+add column if not exists is_active boolean not null default true;
 
 create table if not exists public.slots (
   id uuid primary key default gen_random_uuid(),
@@ -61,7 +65,7 @@ create table if not exists public.slots (
 
 create table if not exists public.bookings (
   id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references auth.users(id) on delete cascade,
+  user_id uuid not null references public.profiles(id) on delete cascade,
   slot_id uuid not null references public.slots(id) on delete restrict,
   program_id uuid not null references public.programs(id) on delete restrict,
   notes text,
@@ -70,6 +74,20 @@ create table if not exists public.bookings (
   updated_at timestamptz not null default now(),
   constraint bookings_one_per_slot unique (slot_id)
 );
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'bookings_user_id_profiles_fkey'
+  ) then
+    alter table public.bookings
+    add constraint bookings_user_id_profiles_fkey
+    foreign key (user_id) references public.profiles(id) on delete cascade;
+  end if;
+end;
+$$;
 
 create index if not exists idx_profiles_email on public.profiles(email);
 create index if not exists idx_trainers_active on public.trainers(is_active);
@@ -237,9 +255,10 @@ using (public.is_admin())
 with check (public.is_admin());
 
 drop policy if exists "Authenticated users can read active trainers" on public.trainers;
-create policy "Authenticated users can read active trainers"
+drop policy if exists "Anyone can read active trainers" on public.trainers;
+create policy "Anyone can read active trainers"
 on public.trainers for select
-to authenticated
+to anon, authenticated
 using (is_active = true or public.is_admin());
 
 drop policy if exists "Admins can manage trainers" on public.trainers;
@@ -250,10 +269,11 @@ using (public.is_admin())
 with check (public.is_admin());
 
 drop policy if exists "Authenticated users can read programs" on public.programs;
-create policy "Authenticated users can read programs"
+drop policy if exists "Anyone can read active programs" on public.programs;
+create policy "Anyone can read active programs"
 on public.programs for select
-to authenticated
-using (true);
+to anon, authenticated
+using (is_active = true or public.is_admin());
 
 drop policy if exists "Admins can manage programs" on public.programs;
 create policy "Admins can manage programs"

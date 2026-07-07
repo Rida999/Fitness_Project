@@ -17,6 +17,7 @@ import AdminPrograms from "./pages/admin_pages/AdminPrograms";
 import AdminTrainers from "./pages/admin_pages/AdminTrainers";
 import AdminSlots from "./pages/admin_pages/AdminSlots";
 import AdminDashboard from "./pages/admin_pages/AdminDashboard";
+import AdminBookings from "./pages/admin_pages/AdminBookings";
 import ViewUsers from "./pages/admin_pages/ViewUsers";
 import ViewTrainers from "./pages/admin_pages/ViewTrainers";
 import Header from "@/components/Header";
@@ -124,6 +125,14 @@ const App = () => (
               element={
                 <AdminRoute>
                   <AdminSlots />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/bookings"
+              element={
+                <AdminRoute>
+                  <AdminBookings />
                 </AdminRoute>
               }
             />
