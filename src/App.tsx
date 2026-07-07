@@ -71,14 +71,7 @@ const App = () => (
           <Routes>
           {/* Public & User Routes */}
           <Route element={<MainLayout />}>            
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/" element={<Index />} />
             <Route
               path="/dashboard"
               element={
@@ -87,22 +80,8 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/trainers"
-              element={
-                <ProtectedRoute>
-                  <Trainers />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/programs"
-              element={
-                <ProtectedRoute>
-                  <Programs />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/trainers" element={<Trainers />} />
+            <Route path="/programs" element={<Programs />} />
             <Route
               path="/book"
               element={
