@@ -4,7 +4,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { getCurrentProfile, supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ArrowRight, Check, Dumbbell, Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react';
+import { Check, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import gymFactoryImage from '@/assets/gymfactory.jpg';
 
@@ -65,113 +65,94 @@ const SignIn = () => {
           </section>
 
           <section className="flex min-h-[560px] items-center justify-center bg-white px-6 py-10 sm:px-12 md:min-h-[640px] md:py-0">
-            <div className="relative w-full max-w-md">
-              <div className="absolute -right-5 -top-5 hidden h-24 w-24 border-[14px] border-primary/10 sm:block" />
-              <div className="absolute -bottom-5 -left-5 hidden h-24 w-24 bg-primary/10 sm:block" />
-
-              <div className="relative overflow-hidden border bg-white shadow-2xl">
-                <div className="h-2 bg-primary" />
-                <div className="p-6 sm:p-8">
-                  <div className="mb-8 flex items-start justify-between gap-5">
-                    <div>
-                      <p className="mb-3 text-xs font-black uppercase tracking-[0.24em] text-muted-foreground">
-                        Member access
-                      </p>
-                      <h2 className="text-4xl font-black leading-tight text-primary">
-                        Start your fitness journey
-                      </h2>
-                    </div>
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center bg-primary text-white">
-                      <Dumbbell className="h-7 w-7" />
-                    </div>
-                  </div>
-
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <div>
-                      <label htmlFor="email" className="text-xs font-black uppercase text-foreground">
-                        Email
-                      </label>
-                      <div className="relative mt-3">
-                        <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={e => updateFormData('email', e.target.value)}
-                          placeholder="Enter your Email Address"
-                          className="h-14 rounded-sm border-0 bg-muted px-11 text-base shadow-none ring-1 ring-transparent transition focus-visible:ring-2 focus-visible:ring-primary"
-                          autoComplete="username"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label htmlFor="password" className="text-xs font-black uppercase text-foreground">
-                        Password
-                      </label>
-                      <div className="relative mt-3">
-                        <LockKeyhole className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          id="password"
-                          type={showPassword ? 'text' : 'password'}
-                          value={formData.password}
-                          onChange={e => updateFormData('password', e.target.value)}
-                          placeholder="Enter your password"
-                          className="h-14 rounded-sm border-0 bg-muted px-11 pr-12 text-base shadow-none ring-1 ring-transparent transition focus-visible:ring-2 focus-visible:ring-primary"
-                          autoComplete="current-password"
-                          required
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-1 top-1 h-12 w-12 hover:bg-transparent hover:text-primary"
-                          onClick={() => setShowPassword(v => !v)}
-                        >
-                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between gap-4 text-sm">
-                      <label className="flex items-center gap-3 font-semibold text-foreground">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-sm bg-primary text-white">
-                          <Check className="h-3.5 w-3.5" />
-                        </span>
-                        Remember me
-                      </label>
-                      <Link to="#" className="font-semibold text-foreground hover:text-primary">
-                        Forgot password ?
-                      </Link>
-                    </div>
-
-                    <div className="grid gap-4 sm:grid-cols-[1.15fr_0.85fr]">
-                      <Button
-                        type="submit"
-                        className="h-12 rounded-sm bg-primary text-sm font-black uppercase tracking-wide text-white shadow-lg shadow-primary/25 transition hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30"
-                        disabled={loading}
-                      >
-                        {loading ? 'Signing in...' : 'Login'}
-                        {!loading && <ArrowRight className="ml-2 h-4 w-4" />}
-                      </Button>
-                      <Button
-                        asChild
-                        type="button"
-                        variant="outline"
-                        className="h-12 rounded-sm border-2 border-primary text-sm font-black uppercase tracking-wide text-primary transition hover:-translate-y-0.5 hover:bg-primary hover:text-white"
-                      >
-                        <Link to="/signup">Sign Up</Link>
-                      </Button>
-                    </div>
-                  </form>
-                </div>
-                <div className="border-t bg-muted/60 px-6 py-4 sm:px-8">
-                  <p className="text-sm font-bold leading-tight text-foreground">
-                    Registering to this website, you accept our Terms of Use and our Privacy Policy.
-                  </p>
+            <div className="w-full max-w-md">
+              <div className="mb-9">
+                <div className="relative">
+                  <h2 className="text-4xl text-center font-black uppercase leading-[0.92] tracking-tight text-foreground">
+                    Start your
+                    <span className="block text-primary">fitness journey</span>
+                  </h2>
                 </div>
               </div>
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                  <label htmlFor="email" className="text-xs font-black uppercase text-foreground">
+                    Email
+                  </label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={e => updateFormData('email', e.target.value)}
+                    placeholder="Enter your Email Address"
+                    className="mt-3 h-14 rounded-sm border-0 bg-muted px-5 text-base shadow-none"
+                    autoComplete="username"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="password" className="text-xs font-black uppercase text-foreground">
+                    Password
+                  </label>
+                  <div className="relative mt-3">
+                    <Input
+                      id="password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={formData.password}
+                      onChange={e => updateFormData('password', e.target.value)}
+                      placeholder="Enter your password"
+                      className="h-14 rounded-sm border-0 bg-muted px-5 pr-12 text-base shadow-none"
+                      autoComplete="current-password"
+                      required
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1 h-12 w-12 hover:bg-transparent hover:text-primary"
+                      onClick={() => setShowPassword(v => !v)}
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between gap-4 text-sm">
+                  <label className="flex items-center gap-3 font-semibold text-foreground">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-sm bg-primary text-white">
+                      <Check className="h-3.5 w-3.5" />
+                    </span>
+                    Remember me
+                  </label>
+                  <Link to="#" className="font-semibold text-foreground hover:text-primary">
+                    Forgot password ?
+                  </Link>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Button
+                    type="submit"
+                    className="h-12 rounded-sm bg-primary text-sm font-black uppercase tracking-wide text-white shadow-lg shadow-primary/25 hover:bg-primary/90"
+                    disabled={loading}
+                  >
+                    {loading ? 'Signing in...' : 'Login'}
+                  </Button>
+                  <Button
+                    asChild
+                    type="button"
+                    variant="outline"
+                    className="h-12 rounded-sm border-2 border-primary text-sm font-black uppercase tracking-wide text-primary hover:bg-primary hover:text-white"
+                  >
+                    <Link to="/signup">Sign Up</Link>
+                  </Button>
+                </div>
+              </form>
+
+              <p className="mt-6 text-sm font-bold leading-tight text-foreground">
+                Registering to this website, you accept our Terms of Use and our Privacy Policy.
+              </p>
             </div>
           </section>
         </div>
