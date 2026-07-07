@@ -5,6 +5,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-gym.jpg";
 
+const demoVideoUrl = "https://www.facebook.com/reel/1390244826493183";
+const facebookEmbedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(
+  demoVideoUrl
+)}&show_text=false&width=420`;
+
 const Hero = () => {
   const [showVideo, setShowVideo] = useState(false);
 
@@ -95,7 +100,7 @@ const Hero = () => {
             exit={{ opacity: 0, transition: { duration: 0.2 } }}
           >
             <motion.div
-              className="relative w-full max-w-3xl aspect-video"
+              className="relative w-[min(92vw,420px)] aspect-[9/16]"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{
                 scale: 1,
@@ -110,14 +115,17 @@ const Hero = () => {
             >
               <iframe
                 className="w-full h-full rounded-md shadow-2xl"
-                src="https://www.youtube.com/embed/bw6jZ68AXn0?autoplay=1"
-                title="Demo Video"
-                allow="autoplay; encrypted-media"
+                src={facebookEmbedUrl}
+                title="ReserveFit demo video"
+                scrolling="no"
+                frameBorder="0"
+                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                 allowFullScreen
               />
               <button
-                className="absolute top-4 right-4 text-white text-3xl"
+                className="absolute -right-3 -top-3 h-10 w-10 rounded-full bg-white text-2xl leading-none text-foreground shadow-lg"
                 onClick={closeVideo}
+                aria-label="Close demo video"
               >
                 &times;
               </button>
