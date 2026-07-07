@@ -222,7 +222,7 @@ const ChatbotBar = () => {
                       <Send className="h-4 w-4" />
                     </Button>
                   </div>
-                  <div className="text-xs text-muted-foreground mt-1 text-center">Powered by FitTrainer Pro AI</div>
+                  <div className="text-xs text-muted-foreground mt-1 text-center">Powered by Gym Factory AI</div>
                 </div>
               </CardContent>
             )}

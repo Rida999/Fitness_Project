@@ -23,30 +23,31 @@ const Hero = () => {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${heroImage})` }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-power/70 to-primary/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-power/90 via-primary/75 to-power/80"></div>
       </div>
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-            Transform Your
-            <span className="block bg-gradient-to-r from-energy to-yellow-400 bg-clip-text text-transparent">
-              Fitness Journey
-            </span>
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase text-white mb-6 leading-none tracking-wide">
+            Gym
+            <span className="block text-energy">Factory</span>
           </h1>
+          <p className="mb-6 text-sm font-black uppercase tracking-[0.28em] text-energy">
+            One Life - One Body - Make It Count
+          </p>
 
           <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
-            Book personalized training sessions with certified professionals. 
-            Achieve your fitness goals with expert guidance and motivation.
+            Choose your coach, pick the right program, and reserve your next
+            Gym Factory session in minutes.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <Button
               asChild
-              variant="energy"
+              variant="outline"
               size="lg"
-              className="text-lg px-8 py-4 h-auto"
+              className="h-auto border-energy bg-energy px-8 py-4 text-lg font-black text-white hover:border-energy/90 hover:bg-energy/90 hover:text-white"
             >
               <Link to="/book">
                 <Calendar className="mr-2 h-5 w-5" />
@@ -116,7 +117,7 @@ const Hero = () => {
               <iframe
                 className="w-full h-full rounded-md shadow-2xl"
                 src={facebookEmbedUrl}
-                title="ReserveFit demo video"
+                title="Gym Factory demo video"
                 scrolling="no"
                 frameBorder="0"
                 allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"

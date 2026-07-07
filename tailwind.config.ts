@@ -33,14 +33,14 @@ export default {
 					foreground: 'hsl(var(--secondary-foreground))'
 				},
 				admin: {
-					DEFAULT: '#a259ec',        // Purple
-					light: '#a873de',          // Lighter purple for hover
+					DEFAULT: '#bf1724',
+					light: '#d72532',
 					foreground: '#fff',
-					glow: '#e0b3ff',           // Soft purple glow
+					glow: '#e5b728',
 				},
 				admin2: {
-					DEFAULT: '#ffe066',  // Yellow
-          			foreground: '#000',          // Soft orange glow
+					DEFAULT: '#e5b728',
+          			foreground: '#171717',
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',

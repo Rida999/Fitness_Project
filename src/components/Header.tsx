@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Dumbbell } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AppUser, getCurrentProfile, isAdminEmail, supabase } from "@/lib/supabase";
+import GymFactoryLogo from "@/components/GymFactoryLogo";
 
 const adminNavigation = [
   { name: "Dashboard", href: "/admin" },
@@ -97,11 +97,9 @@ const Header = () => {
   return (
     <header className="relative w-full bg-background/95 backdrop-blur-sm z-50 border-b">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative h-16 flex items-center">
-        {/* Logo - Left */}
-        <div className="flex items-center space-x-2 h-full">
-          <Dumbbell className="h-8 w-8 text-primary" />
-          <span className="text-xl font-bold text-foreground">FitTrainer Pro</span>
-        </div>
+        <Link to="/" className="flex h-full shrink-0 items-center">
+          <GymFactoryLogo textClassName="text-lg hidden sm:block" />
+        </Link>
 
         {/* Nav Links - Centered Absolutely */}
         <nav className="absolute left-1/2 top-0 h-full flex items-center -translate-x-1/2 space-x-8">

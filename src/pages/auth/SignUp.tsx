@@ -13,8 +13,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Eye, EyeOff, Dumbbell } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import GymFactoryLogo from '@/components/GymFactoryLogo';
 
 const fitnessLevels = [
   { value: 'beginner', label: 'Beginner - New to fitness' },
@@ -98,7 +99,7 @@ const SignUp = () => {
 
       const profile = await getCurrentProfile();
       if (profile) localStorage.setItem('user', JSON.stringify(profile));
-      toast({ title: 'Welcome to FitTrainer Pro! 🎉', description: 'Your account has been created.' });
+      toast({ title: 'Welcome to Gym Factory!', description: 'Your account has been created.' });
       navigate('/dashboard');
     } catch (err: any) {
       toast({ title: 'Registration Error', description: err.message || 'Error creating account.', variant: 'destructive' });
@@ -110,8 +111,7 @@ const SignUp = () => {
       <div className="w-full max-w-2xl">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Dumbbell className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold text-foreground">FitTrainer Pro</span>
+            <GymFactoryLogo full className="h-32 w-32 md:h-40 md:w-40" />
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-2">Start Your Journey</h1>
           <p className="text-muted-foreground">Create your account and begin transforming your fitness</p>

@@ -47,7 +47,7 @@ const Index = () => (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mb-10">
             <p className="text-sm font-semibold uppercase tracking-wide text-primary">
-              Navigate ReserveFit
+              Navigate Gym Factory
             </p>
             <h2 className="mt-3 text-3xl md:text-4xl font-bold text-foreground">
               Everything you need, separated into focused pages

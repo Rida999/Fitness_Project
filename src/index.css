@@ -9,51 +9,51 @@ All colors MUST be HSL.
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 215 25% 27%;
+    --foreground: 0 0% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 27%;
+    --card-foreground: 0 0% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 27%;
+    --popover-foreground: 0 0% 11%;
 
-    --primary: 16 90% 58%;
+    --primary: 356 78% 42%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 100% 97%;
-    --secondary-foreground: 215 25% 27%;
+    --secondary: 45 78% 95%;
+    --secondary-foreground: 0 0% 11%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 42 24% 94%;
+    --muted-foreground: 0 0% 38%;
 
-    --accent: 142 76% 36%;
+    --accent: 45 76% 51%;
     --accent-foreground: 0 0% 100%;
 
-    /* Sports theme colors */
-    --energy: 25 95% 53%;
-    --energy-foreground: 0 0% 100%;
+    /* Gym Factory brand colors */
+    --energy: 45 76% 51%;
+    --energy-foreground: 0 0% 11%;
     
-    --power: 220 91% 42%;
+    --power: 0 0% 11%;
     --power-foreground: 0 0% 100%;
     
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
+    --success: 45 76% 51%;
+    --success-foreground: 0 0% 11%;
     
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(16 90% 58%), hsl(25 95% 53%));
-    --gradient-power: linear-gradient(135deg, hsl(220 91% 42%), hsl(250 84% 54%));
-    --gradient-hero: linear-gradient(135deg, hsl(16 90% 58% / 0.9), hsl(220 91% 42% / 0.9));
+    --gradient-primary: linear-gradient(135deg, hsl(356 78% 42%), hsl(45 76% 51%));
+    --gradient-power: linear-gradient(135deg, hsl(0 0% 11%), hsl(356 78% 42%));
+    --gradient-hero: linear-gradient(135deg, hsl(0 0% 11% / 0.92), hsl(356 78% 42% / 0.82));
     
     /* Shadows */
-    --shadow-glow: 0 10px 40px -10px hsl(16 90% 58% / 0.4);
-    --shadow-power: 0 10px 40px -10px hsl(220 91% 42% / 0.3);
+    --shadow-glow: 0 10px 40px -10px hsl(356 78% 42% / 0.42);
+    --shadow-power: 0 10px 40px -10px hsl(0 0% 11% / 0.35);
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 42 20% 86%;
+    --input: 42 20% 86%;
+    --ring: 356 78% 42%;
 
     --radius: 0.5rem;
 

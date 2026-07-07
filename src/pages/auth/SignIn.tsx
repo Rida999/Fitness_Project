@@ -3,11 +3,10 @@ import { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { getCurrentProfile, supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Eye, EyeOff, Dumbbell } from 'lucide-react';
+import { ArrowRight, Check, Dumbbell, Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import gymFactoryImage from '@/assets/gymfactory.jpg';
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -50,75 +49,132 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-power/5 to-energy/10 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Dumbbell className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold text-foreground">FitTrainer Pro</span>
-          </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Welcome Back</h1>
-          <p className="text-muted-foreground">Sign in to your account to continue your fitness journey</p>
-        </div>
-        <Card className="shadow-2xl">
-          <CardHeader>
-            <CardTitle className="text-center text-xl font-bold">Sign In</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <Label htmlFor="email" className="text-sm font-semibold">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={e => updateFormData('email', e.target.value)}
-                  placeholder="you@example.com"
-                  className="mt-1"
-                  autoComplete="username"
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="password" className="text-sm font-semibold">Password</Label>
-                <div className="relative mt-1">
-                  <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={formData.password}
-                    onChange={e => updateFormData('password', e.target.value)}
-                    placeholder="Enter your password"
-                    autoComplete="current-password"
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-0 top-0 h-full w-10"
-                    onClick={() => setShowPassword(v => !v)}
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </Button>
+    <div className="relative min-h-screen overflow-hidden bg-white">
+      <div className="absolute inset-0 bg-white" />
+      <div className="absolute inset-y-0 right-0 hidden w-[56%] bg-primary md:block [clip-path:polygon(15%_0,100%_0,100%_100%,0_100%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-[34%] bg-primary md:hidden" />
+
+      <div className="relative z-10 flex min-h-screen items-center justify-center p-4 sm:p-8">
+        <div className="grid w-full max-w-6xl items-stretch overflow-hidden bg-white shadow-2xl md:grid-cols-[0.95fr_1.05fr]">
+          <section className="relative min-h-[360px] overflow-hidden bg-primary p-8 text-white md:min-h-[640px]">
+            <img
+              src={gymFactoryImage}
+              alt="Athlete training at Gym Factory"
+              className="absolute inset-0 h-full w-full object-cover object-center"
+            />
+          </section>
+
+          <section className="flex min-h-[560px] items-center justify-center bg-white px-6 py-10 sm:px-12 md:min-h-[640px] md:py-0">
+            <div className="relative w-full max-w-md">
+              <div className="absolute -right-5 -top-5 hidden h-24 w-24 border-[14px] border-primary/10 sm:block" />
+              <div className="absolute -bottom-5 -left-5 hidden h-24 w-24 bg-primary/10 sm:block" />
+
+              <div className="relative overflow-hidden border bg-white shadow-2xl">
+                <div className="h-2 bg-primary" />
+                <div className="p-6 sm:p-8">
+                  <div className="mb-8 flex items-start justify-between gap-5">
+                    <div>
+                      <p className="mb-3 text-xs font-black uppercase tracking-[0.24em] text-muted-foreground">
+                        Member access
+                      </p>
+                      <h2 className="text-4xl font-black leading-tight text-primary">
+                        Start your fitness journey
+                      </h2>
+                    </div>
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center bg-primary text-white">
+                      <Dumbbell className="h-7 w-7" />
+                    </div>
+                  </div>
+
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    <div>
+                      <label htmlFor="email" className="text-xs font-black uppercase text-foreground">
+                        Email
+                      </label>
+                      <div className="relative mt-3">
+                        <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          id="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={e => updateFormData('email', e.target.value)}
+                          placeholder="Enter your Email Address"
+                          className="h-14 rounded-sm border-0 bg-muted px-11 text-base shadow-none ring-1 ring-transparent transition focus-visible:ring-2 focus-visible:ring-primary"
+                          autoComplete="username"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="password" className="text-xs font-black uppercase text-foreground">
+                        Password
+                      </label>
+                      <div className="relative mt-3">
+                        <LockKeyhole className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          id="password"
+                          type={showPassword ? 'text' : 'password'}
+                          value={formData.password}
+                          onChange={e => updateFormData('password', e.target.value)}
+                          placeholder="Enter your password"
+                          className="h-14 rounded-sm border-0 bg-muted px-11 pr-12 text-base shadow-none ring-1 ring-transparent transition focus-visible:ring-2 focus-visible:ring-primary"
+                          autoComplete="current-password"
+                          required
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-1 top-1 h-12 w-12 hover:bg-transparent hover:text-primary"
+                          onClick={() => setShowPassword(v => !v)}
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4 text-sm">
+                      <label className="flex items-center gap-3 font-semibold text-foreground">
+                        <span className="flex h-5 w-5 items-center justify-center rounded-sm bg-primary text-white">
+                          <Check className="h-3.5 w-3.5" />
+                        </span>
+                        Remember me
+                      </label>
+                      <Link to="#" className="font-semibold text-foreground hover:text-primary">
+                        Forgot password ?
+                      </Link>
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-[1.15fr_0.85fr]">
+                      <Button
+                        type="submit"
+                        className="h-12 rounded-sm bg-primary text-sm font-black uppercase tracking-wide text-white shadow-lg shadow-primary/25 transition hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30"
+                        disabled={loading}
+                      >
+                        {loading ? 'Signing in...' : 'Login'}
+                        {!loading && <ArrowRight className="ml-2 h-4 w-4" />}
+                      </Button>
+                      <Button
+                        asChild
+                        type="button"
+                        variant="outline"
+                        className="h-12 rounded-sm border-2 border-primary text-sm font-black uppercase tracking-wide text-primary transition hover:-translate-y-0.5 hover:bg-primary hover:text-white"
+                      >
+                        <Link to="/signup">Sign Up</Link>
+                      </Button>
+                    </div>
+                  </form>
+                </div>
+                <div className="border-t bg-muted/60 px-6 py-4 sm:px-8">
+                  <p className="text-sm font-bold leading-tight text-foreground">
+                    Registering to this website, you accept our Terms of Use and our Privacy Policy.
+                  </p>
                 </div>
               </div>
-              <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center space-x-2">
-                  <input type="checkbox" className="rounded border-gray-300" />
-                  <span>Remember me</span>
-                </label>
-                <Link to="#" className="text-primary hover:text-primary/80">Forgot password?</Link>
-              </div>
-              <Button type="submit" variant="energy" className="w-full" disabled={loading}>
-                {loading ? 'Signing In...' : 'Sign In'}
-              </Button>
-            </form>
-            <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">Don't have an account? </span>
-              <Link to="/signup" className="text-primary hover:text-primary/80 font-medium">Sign up here</Link>
             </div>
-          </CardContent>
-        </Card>
+          </section>
+        </div>
       </div>
     </div>
   );

@@ -135,7 +135,7 @@ export default function AdminDashboard() {
               <LayoutDashboard className="h-4 w-4" />
               Admin control center
             </div>
-            <h1 className="text-3xl font-bold">ReserveFit Admin</h1>
+            <h1 className="text-3xl font-bold">Gym Factory Admin</h1>
             <p className="mt-2 max-w-2xl text-muted-foreground">
               Signed-in users with the email admin@admin.com can manage programs,
               trainers, available sessions, users, and bookings.
