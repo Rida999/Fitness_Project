@@ -71,23 +71,23 @@ const SignIn = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-white">
       <div className="absolute inset-0 bg-white" />
-      <div className="absolute inset-y-0 right-0 w-[72%] bg-primary [clip-path:polygon(24%_0,100%_0,100%_100%,0_100%)] md:w-[58%] md:[clip-path:polygon(15%_0,100%_0,100%_100%,0_100%)]" />
+      <div className="absolute inset-y-0 right-0 w-[72%] bg-primary [clip-path:polygon(38%_0,100%_0,100%_100%,0_100%)] md:w-[58%] md:[clip-path:polygon(28%_0,100%_0,100%_100%,0_100%)]" />
 
       <div className="relative z-10 flex min-h-screen items-center justify-center p-4 sm:p-8">
-        <div className="isolate grid w-full max-w-6xl items-stretch overflow-hidden bg-white shadow-2xl md:grid-cols-[0.95fr_1.05fr]">
+        <div className="isolate grid w-full max-w-6xl items-stretch overflow-hidden rounded-lg bg-white shadow-[0_30px_80px_rgba(0,0,0,0.28)] md:grid-cols-[0.95fr_1.05fr] md:rounded-none">
           <motion.section
             layoutId="auth-photo-panel"
             initial={false}
             animate={{ opacity: 1, x: 0 }}
             transition={{ type: 'spring', stiffness: 85, damping: 28, mass: 0.9 }}
-            className="relative z-20 min-h-[260px] overflow-hidden bg-primary p-8 text-white sm:min-h-[320px] md:min-h-[720px]"
+            className="relative z-20 min-h-[320px] overflow-hidden bg-primary p-8 text-white sm:min-h-[380px] md:min-h-[720px]"
           >
             <img
               src={gymFactoryImage}
               alt="Athlete training at Gym Factory"
               loading="eager"
               decoding="sync"
-              className="absolute inset-0 h-full w-full object-cover object-center"
+              className="absolute inset-0 h-full w-full object-fill"
             />
           </motion.section>
 
