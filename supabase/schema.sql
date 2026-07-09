@@ -94,6 +94,22 @@ create index if not exists idx_trainers_active on public.trainers(is_active);
 create index if not exists idx_slots_trainer_start on public.slots(trainer_id, slot_start);
 create index if not exists idx_bookings_user_id on public.bookings(user_id);
 
+create or replace function public.email_registered(check_email text)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.profiles
+    where lower(email) = lower(trim(check_email))
+  );
+$$;
+
+grant execute on function public.email_registered(text) to anon, authenticated;
+
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql

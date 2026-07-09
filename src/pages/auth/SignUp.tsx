@@ -162,8 +162,7 @@ const SignUp = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-white">
       <div className="absolute inset-0 bg-white" />
-      <div className="absolute inset-y-0 right-0 hidden w-[58%] bg-primary md:block [clip-path:polygon(15%_0,100%_0,100%_100%,0_100%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-[34%] bg-primary md:hidden" />
+      <div className="absolute inset-y-0 right-0 w-[72%] bg-primary [clip-path:polygon(24%_0,100%_0,100%_100%,0_100%)] md:w-[58%] md:[clip-path:polygon(15%_0,100%_0,100%_100%,0_100%)]" />
 
       <div className="relative z-10 flex min-h-screen items-center justify-center p-4 sm:p-8">
         <div className="isolate grid w-full max-w-6xl items-stretch overflow-hidden bg-white shadow-2xl md:grid-cols-[1.05fr_0.95fr]">
@@ -172,7 +171,7 @@ const SignUp = () => {
             initial={false}
             animate={{ opacity: 1, x: 0 }}
             transition={{ type: 'spring', stiffness: 85, damping: 28, mass: 0.9 }}
-            className="order-2 relative z-20 min-h-[360px] overflow-hidden bg-primary md:order-2 md:min-h-[720px]"
+            className="order-1 relative z-20 min-h-[260px] overflow-hidden bg-primary sm:min-h-[320px] md:order-2 md:min-h-[720px]"
           >
             <img
               src={gymFactoryImage}
@@ -187,7 +186,7 @@ const SignUp = () => {
             initial={false}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 order-1 flex min-h-[620px] items-center justify-center bg-white px-6 py-8 sm:px-10 md:min-h-[720px] md:py-6"
+            className="relative z-10 order-2 flex min-h-[620px] items-center justify-center bg-white px-6 py-8 sm:px-10 md:order-1 md:min-h-[720px] md:py-6"
           >
             <div className="w-full max-w-xl">
               <div className="mb-5 text-center">

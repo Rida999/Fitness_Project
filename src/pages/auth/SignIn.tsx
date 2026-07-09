@@ -32,7 +32,26 @@ const SignIn = () => {
 
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword(formData);
+      const email = formData.email.trim().toLowerCase();
+      const { data: emailRegistered, error: emailCheckError } = await supabase.rpc(
+        'email_registered',
+        { check_email: email }
+      );
+
+      if (!emailCheckError && emailRegistered === false) {
+        toast({
+          title: 'Email Not Registered',
+          description: 'No account was found with this email.',
+          variant: 'destructive',
+        });
+        setLoading(false);
+        return;
+      }
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password: formData.password,
+      });
       if (error) throw error;
 
       const profile = await getCurrentProfile();
@@ -41,8 +60,8 @@ const SignIn = () => {
       navigate(`${redirectTo?.pathname ?? '/dashboard'}${redirectTo?.search ?? ''}`, { replace: true });
     } catch (err: any) {
       toast({
-        title: 'Sign In Error',
-        description: err.message || 'Invalid email or password. Please try again.',
+        title: 'Wrong Credentials',
+        description: 'The password is incorrect for this email.',
         variant: 'destructive',
       });
     }
@@ -52,8 +71,7 @@ const SignIn = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-white">
       <div className="absolute inset-0 bg-white" />
-      <div className="absolute inset-y-0 right-0 hidden w-[58%] bg-primary md:block [clip-path:polygon(15%_0,100%_0,100%_100%,0_100%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-[34%] bg-primary md:hidden" />
+      <div className="absolute inset-y-0 right-0 w-[72%] bg-primary [clip-path:polygon(24%_0,100%_0,100%_100%,0_100%)] md:w-[58%] md:[clip-path:polygon(15%_0,100%_0,100%_100%,0_100%)]" />
 
       <div className="relative z-10 flex min-h-screen items-center justify-center p-4 sm:p-8">
         <div className="isolate grid w-full max-w-6xl items-stretch overflow-hidden bg-white shadow-2xl md:grid-cols-[0.95fr_1.05fr]">
@@ -62,7 +80,7 @@ const SignIn = () => {
             initial={false}
             animate={{ opacity: 1, x: 0 }}
             transition={{ type: 'spring', stiffness: 85, damping: 28, mass: 0.9 }}
-            className="relative z-20 min-h-[360px] overflow-hidden bg-primary p-8 text-white md:min-h-[720px]"
+            className="relative z-20 min-h-[260px] overflow-hidden bg-primary p-8 text-white sm:min-h-[320px] md:min-h-[720px]"
           >
             <img
               src={gymFactoryImage}
