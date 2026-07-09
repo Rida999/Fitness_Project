@@ -84,10 +84,12 @@ const SignUp = () => {
 
     if (!firstName) nextErrors.firstName = 'First name required.';
     else if (firstName.length < 2) nextErrors.firstName = 'Use 2+ letters.';
+    else if (firstName.length > 20) nextErrors.firstName = 'Max 20 characters.';
     else if (!namePattern.test(firstName)) nextErrors.firstName = 'Letters only, no symbols.';
 
     if (!lastName) nextErrors.lastName = 'Last name required.';
     else if (lastName.length < 2) nextErrors.lastName = 'Use 2+ letters.';
+    else if (lastName.length > 20) nextErrors.lastName = 'Max 20 characters.';
     else if (!namePattern.test(lastName)) nextErrors.lastName = 'Letters only, no symbols.';
 
     if (!email) nextErrors.email = 'Email required.';
@@ -208,6 +210,7 @@ const SignUp = () => {
                       onChange={e => updateFormData('firstName', e.target.value)}
                       placeholder="Enter first name"
                       className={getFieldClass('firstName')}
+                      maxLength={20}
                       aria-invalid={Boolean(errors.firstName)}
                     />
                     {errors.firstName && <p className={errorTextClass}>{errors.firstName}</p>}
@@ -222,6 +225,7 @@ const SignUp = () => {
                       onChange={e => updateFormData('lastName', e.target.value)}
                       placeholder="Enter last name"
                       className={getFieldClass('lastName')}
+                      maxLength={20}
                       aria-invalid={Boolean(errors.lastName)}
                     />
                     {errors.lastName && <p className={errorTextClass}>{errors.lastName}</p>}
