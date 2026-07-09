@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import { LayoutGroup } from "framer-motion";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Trainers from "./pages/Trainers";
@@ -69,7 +70,8 @@ const App = () => (
       <Sonner />
       {isSupabaseConfigured ? (
         <BrowserRouter>
-          <Routes>
+          <LayoutGroup id="auth-transition">
+            <Routes>
           {/* Public & User Routes */}
           <Route element={<MainLayout />}>            
             <Route path="/" element={<Index />} />
@@ -156,7 +158,8 @@ const App = () => (
 
           {/* 404 */}
           <Route path="*" element={<NotFound />} />
-          </Routes>
+            </Routes>
+          </LayoutGroup>
         </BrowserRouter>
       ) : (
         <MissingSupabaseConfig />

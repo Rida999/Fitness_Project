@@ -1,6 +1,7 @@
 // src/pages/auth/SignIn.tsx
 import { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { getCurrentProfile, supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -51,20 +52,33 @@ const SignIn = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-white">
       <div className="absolute inset-0 bg-white" />
-      <div className="absolute inset-y-0 right-0 hidden w-[56%] bg-primary md:block [clip-path:polygon(15%_0,100%_0,100%_100%,0_100%)]" />
+      <div className="absolute inset-y-0 right-0 hidden w-[58%] bg-primary md:block [clip-path:polygon(15%_0,100%_0,100%_100%,0_100%)]" />
       <div className="absolute inset-x-0 bottom-0 h-[34%] bg-primary md:hidden" />
 
       <div className="relative z-10 flex min-h-screen items-center justify-center p-4 sm:p-8">
-        <div className="grid w-full max-w-6xl items-stretch overflow-hidden bg-white shadow-2xl md:grid-cols-[0.95fr_1.05fr]">
-          <section className="relative min-h-[360px] overflow-hidden bg-primary p-8 text-white md:min-h-[640px]">
+        <div className="isolate grid w-full max-w-6xl items-stretch overflow-hidden bg-white shadow-2xl md:grid-cols-[0.95fr_1.05fr]">
+          <motion.section
+            layoutId="auth-photo-panel"
+            initial={false}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ type: 'spring', stiffness: 85, damping: 28, mass: 0.9 }}
+            className="relative z-20 min-h-[360px] overflow-hidden bg-primary p-8 text-white md:min-h-[720px]"
+          >
             <img
               src={gymFactoryImage}
               alt="Athlete training at Gym Factory"
+              loading="eager"
+              decoding="sync"
               className="absolute inset-0 h-full w-full object-cover object-center"
             />
-          </section>
+          </motion.section>
 
-          <section className="flex min-h-[560px] items-center justify-center bg-white px-6 py-10 sm:px-12 md:min-h-[640px] md:py-0">
+          <motion.section
+            initial={false}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-10 flex min-h-[620px] items-center justify-center bg-white px-6 py-10 sm:px-12 md:min-h-[720px] md:py-0"
+          >
             <div className="w-full max-w-md">
               <div className="mb-9">
                 <div className="relative">
@@ -145,7 +159,7 @@ const SignIn = () => {
                     variant="outline"
                     className="h-12 rounded-sm border-2 border-primary text-sm font-black uppercase tracking-wide text-primary hover:bg-primary hover:text-white"
                   >
-                    <Link to="/signup">Sign Up</Link>
+                    <Link to="/signup" viewTransition>Sign Up</Link>
                   </Button>
                 </div>
               </form>
@@ -154,7 +168,7 @@ const SignIn = () => {
                 Registering to this website, you accept our Terms of Use and our Privacy Policy.
               </p>
             </div>
-          </section>
+          </motion.section>
         </div>
       </div>
     </div>
