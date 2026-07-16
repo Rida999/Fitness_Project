@@ -23,7 +23,8 @@ const Hero = () => {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${heroImage})` }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-power/90 via-primary/75 to-power/80"></div>
+        <div className="absolute inset-0 bg-black/25"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/90"></div>
       </div>
 
       {/* Content */}
@@ -37,17 +38,12 @@ const Hero = () => {
             One Life - One Body - Make It Count
           </p>
 
-          <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
-            Choose your coach, pick the right program, and reserve your next
-            Gym Factory session in minutes.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <Button
               asChild
               variant="outline"
               size="lg"
-              className="h-auto border-energy bg-energy px-8 py-4 text-lg font-black text-white hover:border-energy/90 hover:bg-energy/90 hover:text-white"
+              className="h-auto border-energy bg-energy px-8 py-4 text-lg font-semibold text-white hover:border-energy/90 hover:bg-energy/90 hover:text-white"
             >
               <Link to="/book">
                 <Calendar className="mr-2 h-5 w-5" />

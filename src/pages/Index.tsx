@@ -68,7 +68,10 @@ const Index = () => (
                   <p className="mt-2 text-sm text-muted-foreground min-h-[60px]">
                     {item.description}
                   </p>
-                  <Button asChild variant="outline" className="mt-5 w-full group-hover:border-primary group-hover:text-primary">
+                  <Button
+                    asChild
+                    className="mt-5 w-full bg-primary text-white shadow-md shadow-primary/20 transition hover:bg-primary/90 hover:text-white hover:shadow-lg hover:shadow-primary/30"
+                  >
                     <Link to={item.href}>
                       Open
                       <ArrowRight className="ml-2 h-4 w-4" />
