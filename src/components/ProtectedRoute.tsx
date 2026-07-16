@@ -2,6 +2,7 @@
 import { ReactNode, useEffect, useState } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
+import LoadingScreen from '@/components/LoadingScreen'
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const location = useLocation()
@@ -15,7 +16,7 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
     })
   }, [])
 
-  if (isLoading) return null
+  if (isLoading) return <LoadingScreen message="Checking your session..." />
 
   return isAuthenticated
     ? <>{children}</>

@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dumbbell, Heart, Target, Zap, Users, Clock, TrendingUp, Flame } from "lucide-react";
+import LoadingScreen from "@/components/LoadingScreen";
 
 const intensityStyles: Record<string, { color: string; bg: string }> = {
   "Very High": { color: "text-red-700", bg: "bg-red-100" },
@@ -78,8 +79,8 @@ export default function ProgramsSection() {
 
   if (loading) {
     return (
-      <section id="programs" className="py-20 bg-background text-center">
-        <p className="text-lg text-muted-foreground">Loading programs…</p>
+      <section id="programs" className="bg-background">
+        <LoadingScreen message="Loading programs..." fullScreen={false} />
       </section>
     );
   }

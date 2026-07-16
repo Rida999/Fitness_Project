@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { getCurrentProfile, supabase, type AppUser } from "@/lib/supabase";
+import LoadingScreen from "@/components/LoadingScreen";
 
 type BookingRow = {
   id: string;
@@ -134,6 +135,10 @@ const Dashboard = () => {
       setCancellingId(null);
     }
   };
+
+  if (loading) {
+    return <LoadingScreen message="Loading your dashboard..." />;
+  }
 
   return (
     <div className="min-h-screen bg-secondary/30">

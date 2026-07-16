@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star, Calendar, Award, Users } from "lucide-react";
 import trainerSarah from "@/assets/trainer-sarah.jpg";
 import trainerMike from "@/assets/trainer-mike.jpg";
+import LoadingScreen from "@/components/LoadingScreen";
 
 interface TrainerRow {
   id: string;
@@ -73,8 +74,8 @@ export default function TrainersSection() {
 
   if (loading) {
     return (
-      <section id="trainers" className="py-20 bg-secondary/30 text-center">
-        <p className="text-lg text-muted-foreground">Loading trainers…</p>
+      <section id="trainers" className="bg-secondary/30">
+        <LoadingScreen message="Loading trainers..." fullScreen={false} />
       </section>
     );
   }
