@@ -47,10 +47,13 @@ const formatTime = (value?: string) =>
     : "";
 
 const getStatusClass = (status: BookingRow["status"]) => {
-  if (status === "confirmed") return "bg-green-100 text-green-800";
-  if (status === "completed") return "bg-blue-100 text-blue-800";
-  return "bg-gray-100 text-gray-700";
+  if (status === "confirmed") return "bg-primary/10 text-primary";
+  if (status === "completed") return "bg-energy text-energy-foreground";
+  return "bg-muted text-muted-foreground";
 };
+
+const redActionClass =
+  "bg-primary text-white shadow-lg shadow-primary/25 hover:bg-primary/90 hover:text-white hover:shadow-primary/35";
 
 const Dashboard = () => {
   const { toast } = useToast();
@@ -156,7 +159,7 @@ const Dashboard = () => {
                 Track your sessions, keep your next workout in view, and jump back into booking when your schedule opens up.
               </p>
             </div>
-            <Button asChild variant="energy" size="lg">
+            <Button asChild size="lg" className={redActionClass}>
               <Link to="/book">
                 <Calendar className="mr-2 h-5 w-5" />
                 Book a Session
@@ -249,6 +252,7 @@ const Dashboard = () => {
                         </div>
                         <Button
                           variant="outline"
+                          className="border-primary/30 text-primary hover:border-primary hover:bg-primary hover:text-white"
                           onClick={() => cancelBooking(booking)}
                           disabled={cancellingId === booking.id}
                         >
@@ -265,7 +269,7 @@ const Dashboard = () => {
                   <p className="mt-2 text-sm text-muted-foreground">
                     Choose a trainer and program to get your next workout on the calendar.
                   </p>
-                  <Button asChild className="mt-5" variant="energy">
+                  <Button asChild className={`mt-5 ${redActionClass}`}>
                     <Link to="/book">Book your first session</Link>
                   </Button>
                 </div>

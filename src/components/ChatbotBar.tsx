@@ -120,12 +120,12 @@ const ChatbotBar = () => {
                 <div className="flex items-center gap-2">
                   <div className="relative">
                     <Bot className="h-6 w-6" />
-                    <Sparkles className="h-3 w-3 absolute -top-1 -right-1 text-yellow-300" />
+                    <Sparkles className="h-3 w-3 absolute -top-1 -right-1 text-energy" />
                   </div>
                   <div>
                     <div className="font-semibold">FitTrainer Assistant</div>
                     <div className="text-xs text-white/80 flex items-center gap-1">
-                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 bg-energy rounded-full animate-pulse"></div>
                       Online & ready to help
                     </div>
                   </div>
@@ -235,10 +235,10 @@ const ChatbotBar = () => {
           {isOpen ? <X className="h-7 w-7" /> : <MessageCircle className="h-7 w-7 transition-transform duration-200 group-hover:scale-110" />}
           {!isOpen && (
             <>  
-              <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full animate-pulse flex items-center justify-center">
+              <div className="absolute -top-2 -right-2 w-4 h-4 bg-primary rounded-full animate-pulse flex items-center justify-center">
                 <div className="w-2 h-2 bg-white rounded-full"></div>
               </div>
-              <div className="absolute -top-1 -right-1 w-6 h-6 bg-red-500/30 rounded-full animate-ping"></div>
+              <div className="absolute -top-1 -right-1 w-6 h-6 bg-primary/30 rounded-full animate-ping"></div>
             </>
           )}
         </div>

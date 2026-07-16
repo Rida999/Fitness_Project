@@ -108,15 +108,15 @@ const ViewTrainers: React.FC = () => {
   const getIntensityColor = (intensity?: string) => {
     switch (intensity?.toLowerCase()) {
       case "low":
-        return "bg-green-100 text-green-800";
+        return "bg-secondary text-secondary-foreground";
       case "moderate":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-energy text-energy-foreground";
       case "high":
-        return "bg-orange-100 text-orange-800";
+        return "bg-primary/10 text-primary";
       case "extreme":
-        return "bg-red-100 text-red-800";
+        return "bg-primary text-primary-foreground";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-muted text-muted-foreground";
     }
   };
 
@@ -168,8 +168,8 @@ const ViewTrainers: React.FC = () => {
           <Card className="fitness-card text-center">
             <CardContent className="pt-6">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <UserCheck className="w-5 h-5 text-green-600" />
-                <span className="text-2xl font-bold text-green-600">
+                <UserCheck className="w-5 h-5 text-primary" />
+                <span className="text-2xl font-bold text-primary">
                   {trainers.filter((t) => t.is_active).length}
                 </span>
               </div>
@@ -231,7 +231,7 @@ const ViewTrainers: React.FC = () => {
                       <CardTitle className="flex items-center gap-2">
                         {trainer.first_name} {trainer.last_name}
                         {trainer.is_active ? (
-                          <Badge className="bg-green-100 text-green-800">
+                          <Badge className="bg-primary/10 text-primary">
                             <Heart className="w-3 h-3 mr-1" />
                             Active
                           </Badge>
@@ -247,7 +247,7 @@ const ViewTrainers: React.FC = () => {
                       <div className="flex items-center gap-4 mt-2">
                         {trainer.rating != null && (
                           <div className="flex items-center gap-1">
-                            <Star className="w-4 h-4 fill-current text-yellow-500" />
+                            <Star className="w-4 h-4 fill-current text-energy" />
                             <span className="font-semibold">
                               {trainer.rating}
                             </span>

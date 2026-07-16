@@ -130,24 +130,24 @@ const Header = () => {
           ) : (
             <div className="relative" ref={avatarRef}>
               <button
-                className="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white font-bold focus:outline-none focus:ring-2 ring-2 ring-blue-300"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white font-bold focus:outline-none focus:ring-2 ring-2 ring-energy/70"
                 onClick={() => setShowDropdown((v) => !v)}
                 aria-label="Account"
               >
                 {initials}
               </button>
               {showDropdown && (
-                <div className="absolute right-0 mt-2 w-48 rounded shadow-lg bg-white ring-1 ring-black/10 z-50">
+                <div className="absolute right-0 mt-2 w-48 rounded shadow-lg bg-card ring-1 ring-primary/20 z-50">
                   <div className="px-4 py-2 border-b">
-                    <div className="text-sm font-semibold text-gray-700">
+                    <div className="text-sm font-semibold text-foreground">
                       {user.first_name} {user.last_name}
                     </div>
-                    <div className="text-xs text-gray-500 truncate">
+                    <div className="text-xs text-muted-foreground truncate">
                       {user.email}
                     </div>
                   </div>
                   <button
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-secondary"
                     onClick={handleSignOut}
                   >
                     Sign Out

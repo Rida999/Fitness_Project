@@ -7,10 +7,10 @@ import { Dumbbell, Heart, Target, Zap, Users, Clock, TrendingUp, Flame } from "l
 import LoadingScreen from "@/components/LoadingScreen";
 
 const intensityStyles: Record<string, { color: string; bg: string }> = {
-  "Very High": { color: "text-red-700", bg: "bg-red-100" },
-  High:         { color: "text-orange-700", bg: "bg-orange-100" },
-  Medium:       { color: "text-blue-700", bg: "bg-blue-100" },
-  Variable:     { color: "text-green-700", bg: "bg-green-100" },
+  "Very High": { color: "text-primary", bg: "bg-primary/10" },
+  High:         { color: "text-primary", bg: "bg-primary/10" },
+  Medium:       { color: "text-power", bg: "bg-power/10" },
+  Variable:     { color: "text-energy-foreground", bg: "bg-energy" },
 };
 
 const placeholderIcons = [Dumbbell, Zap, Heart, Target, TrendingUp, Flame];
@@ -128,7 +128,7 @@ export default function ProgramsSection() {
                 </ul>
                 <Button
                   variant="outline"
-                  className="w-full transition group-hover:border-orange-500 group-hover:text-orange-500 hover:!bg-green-600 hover:!text-white hover:!border-white"
+                  className="w-full transition group-hover:border-primary group-hover:text-primary hover:!bg-primary hover:!text-white hover:!border-primary"
                 >
                   Learn More
                 </Button>

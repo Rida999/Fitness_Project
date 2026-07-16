@@ -98,19 +98,19 @@ const ViewUsers: React.FC = () => {
     switch (status) {
       case "active":
         return (
-          <Badge className="bg-green-100 text-green-800">
+          <Badge className="bg-primary/10 text-primary">
             🌟 Active
           </Badge>
         );
       case "trial":
         return (
-          <Badge className="bg-blue-100 text-blue-800">
+          <Badge className="bg-energy text-energy-foreground">
             🚀 Trial
           </Badge>
         );
       case "inactive":
         return (
-          <Badge className="bg-gray-100 text-gray-800">
+          <Badge className="bg-muted text-muted-foreground">
             😴 Inactive
           </Badge>
         );
@@ -169,15 +169,15 @@ const ViewUsers: React.FC = () => {
           </Card>
           <Card className="fitness-card text-center">
             <CardContent className="pt-6">
-              <Star className="mx-auto w-5 h-5 text-green-600" />
-              <h2 className="text-2xl font-bold text-green-600">{stats.active}</h2>
+              <Star className="mx-auto w-5 h-5 text-primary" />
+              <h2 className="text-2xl font-bold text-primary">{stats.active}</h2>
               <p className="text-sm text-muted-foreground">Active Subscribers</p>
             </CardContent>
           </Card>
           <Card className="fitness-card text-center">
             <CardContent className="pt-6">
-              <TrendingUp className="mx-auto w-5 h-5 text-blue-600" />
-              <h2 className="text-2xl font-bold text-blue-600">{stats.trial}</h2>
+              <TrendingUp className="mx-auto w-5 h-5 text-energy" />
+              <h2 className="text-2xl font-bold text-energy">{stats.trial}</h2>
               <p className="text-sm text-muted-foreground">Trial Users</p>
             </CardContent>
           </Card>
@@ -247,7 +247,7 @@ const ViewUsers: React.FC = () => {
                           Verified
                         </Badge>
                       ) : (
-                        <Badge variant="outline" className="text-xs bg-orange-50 text-orange-600">
+                        <Badge variant="outline" className="text-xs bg-secondary text-secondary-foreground">
                           Pending
                         </Badge>
                       )}

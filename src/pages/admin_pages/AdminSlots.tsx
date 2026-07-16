@@ -111,7 +111,7 @@ const AdminSlots: React.FC = () => {
       toast({
         title: "🎉 Slot(s) Added Successfully!",
         description: `${slots.length} slot${slots.length > 1 ? "s" : ""} created for ${t?.first_name} ${t?.last_name}!`,
-        className: "border-green-200 bg-green-50 text-green-800",
+        className: "border-primary/20 bg-primary/10 text-primary",
       });
       setForm({ trainer_id: "", slot_start: "", slot_end: "" });
     } catch (err: any) {
@@ -243,7 +243,7 @@ const AdminSlots: React.FC = () => {
                         </div>
                         {selectedTrainer.rating != null && (
                           <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            <Star className="w-3 h-3 text-yellow-500" />{" "}
+                            <Star className="w-3 h-3 text-energy" />{" "}
                             {selectedTrainer.rating}
                           </div>
                         )}
