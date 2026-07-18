@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AppUser, getCurrentProfile, isAdminEmail, supabase } from "@/lib/supabase";
 import GymFactoryLogo from "@/components/GymFactoryLogo";
+import { Menu, X } from "lucide-react";
 
 const adminNavigation = [
   { name: "Dashboard", href: "/admin" },
@@ -60,6 +61,11 @@ const Header = () => {
     return () => data.subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+    setIsMenuOpen(false);
+    setShowDropdown(false);
+  }, [location.pathname]);
+
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(e: any) {
@@ -95,20 +101,31 @@ const Header = () => {
       : "A";
 
   return (
-    <header className="relative w-full bg-background/95 backdrop-blur-sm z-50 border-b">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative h-16 flex items-center">
-        <Link to="/" className="flex h-full shrink-0 items-center">
-          <GymFactoryLogo textClassName="text-lg hidden sm:block" />
+    <header className="sticky top-0 z-50 w-full border-b bg-white">
+      <div className="container relative mx-auto flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <button
+          type="button"
+          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground shadow-sm transition hover:bg-primary hover:text-white lg:hidden"
+          onClick={() => setIsMenuOpen((value) => !value)}
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isMenuOpen}
+        >
+          {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+
+        <Link to="/" className="flex min-w-0 shrink-0 items-center">
+          <GymFactoryLogo textClassName="text-base sm:text-lg" />
         </Link>
 
-        {/* Nav Links - Centered Absolutely */}
-        <nav className="absolute left-1/2 top-0 h-full flex items-center -translate-x-1/2 space-x-8">
+        <nav className="hidden flex-1 items-center justify-center gap-2 lg:flex">
           {navigation.map((item) => (
             <Link
               key={item.name}
               to={item.href}
-              className={`text-foreground hover:text-primary transition-colors font-medium ${
-                isActive(item.href) ? "text-primary" : ""
+              className={`rounded-full px-3 py-2 text-sm font-semibold transition-colors ${
+                isActive(item.href)
+                  ? "bg-primary/10 text-primary"
+                  : "text-foreground hover:bg-secondary hover:text-primary"
               }`}
             >
               {item.name}
@@ -116,8 +133,7 @@ const Header = () => {
           ))}
         </nav>
 
-        {/* Auth Buttons / Avatar - Right */}
-        <div className="absolute right-0 top-0 h-full flex items-center space-x-4">
+        <div className="hidden shrink-0 items-center space-x-3 lg:flex">
           {!user ? (
             <>
               <Link to="/signin">
@@ -157,7 +173,66 @@ const Header = () => {
             </div>
           )}
         </div>
+
+        <div className="flex min-w-10 shrink-0 items-center justify-end gap-2 lg:hidden">
+          {user && (
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-bold text-white ring-2 ring-energy/70">
+              {initials}
+            </div>
+          )}
+        </div>
       </div>
+
+      {isMenuOpen && (
+        <div className="border-t bg-background shadow-xl lg:hidden">
+          <div className="container mx-auto space-y-4 px-4 py-4 sm:px-6">
+            <nav className="grid gap-2">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`flex items-center justify-between rounded-lg px-4 py-3 text-sm font-bold transition ${
+                    isActive(item.href)
+                      ? "bg-primary text-white"
+                      : "bg-secondary/60 text-foreground hover:bg-primary hover:text-white"
+                  }`}
+                >
+                  {item.name}
+                  <span className="h-2 w-2 rounded-full bg-current opacity-40" />
+                </Link>
+              ))}
+            </nav>
+
+            {!user ? (
+              <div className="grid grid-cols-2 gap-3 border-t pt-4">
+                <Button asChild variant="outline" className="border-primary/30 text-primary hover:bg-primary hover:text-white">
+                  <Link to="/signin">Sign In</Link>
+                </Button>
+                <Button asChild className="bg-primary text-white hover:bg-primary/90">
+                  <Link to="/signup">Get Started</Link>
+                </Button>
+              </div>
+            ) : (
+              <div className="border-t pt-4">
+                <div className="mb-3 rounded-lg bg-secondary/60 px-4 py-3">
+                  <div className="text-sm font-semibold text-foreground">
+                    {user.first_name} {user.last_name}
+                  </div>
+                  <div className="truncate text-xs text-muted-foreground">{user.email}</div>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full border-primary/30 text-primary hover:bg-primary hover:text-white"
+                  onClick={handleSignOut}
+                >
+                  Sign Out
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 };

@@ -30,7 +30,7 @@ const GymFactoryLogo = ({
       <img
         src={gymFactoryLogo}
         alt="Gym Factory"
-        className={`h-11 w-11 object-contain ${markClassName}`}
+        className={`h-11 w-11 object-contain mix-blend-multiply ${markClassName}`}
       />
       <div className={textClassName}>
         <div className="font-black uppercase leading-none tracking-wide text-foreground">
