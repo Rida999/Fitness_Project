@@ -5,6 +5,10 @@ import card1 from "@/assets/card1.png";
 import card2 from "@/assets/card2.png";
 import card3 from "@/assets/card3.png";
 import card4 from "@/assets/card4.png";
+import gymfactoryVideo from "@/assets/gymfactory.mp4";
+import personalTrainingVideo from "@/assets/pt.mp4";
+import groupClassesVideo from "@/assets/group_classes.mp4";
+import bookSessionVideo from "@/assets/book_session.mp4";
 
 const homeLinks = [
   {
@@ -13,7 +17,7 @@ const homeLinks = [
     href: "/dashboard",
     image: card1,
     label: "Member Dashboard",
-    videoUrl: "https://assets.pinterest.com/ext/embed.html?url=https%3A%2F%2Fpin.it%2F1FZei4Lma",
+    video: gymfactoryVideo,
   },
   {
     title: "Trainers",
@@ -21,6 +25,7 @@ const homeLinks = [
     href: "/trainers",
     image: card2,
     label: "Personal Training",
+    video: personalTrainingVideo,
   },
   {
     title: "Programs",
@@ -28,6 +33,7 @@ const homeLinks = [
     href: "/programs",
     image: card3,
     label: "Group Classes",
+    video: groupClassesVideo,
   },
   {
     title: "Book Session",
@@ -35,6 +41,7 @@ const homeLinks = [
     href: "/book",
     image: card4,
     label: "Book Your Session",
+    video: bookSessionVideo,
   },
 ];
 
@@ -206,21 +213,44 @@ const Index = () => (
                 to={item.href}
                 aria-label={`${item.title}: ${item.description}`}
                 className="group relative block h-[430px] overflow-hidden bg-black shadow-2xl shadow-black/35 outline-none transition duration-300 hover:-translate-y-1 hover:shadow-primary/35 focus-visible:ring-2 focus-visible:ring-energy"
+                onMouseEnter={(event) => {
+                  const video = event.currentTarget.querySelector("video");
+                  if (!video) return;
+                  video.currentTime = 0;
+                  void video.play();
+                }}
+                onMouseLeave={(event) => {
+                  const video = event.currentTarget.querySelector("video");
+                  if (!video) return;
+                  video.pause();
+                  video.currentTime = 0;
+                }}
+                onFocus={(event) => {
+                  const video = event.currentTarget.querySelector("video");
+                  if (!video) return;
+                  video.currentTime = 0;
+                  void video.play();
+                }}
+                onBlur={(event) => {
+                  const video = event.currentTarget.querySelector("video");
+                  if (!video) return;
+                  video.pause();
+                  video.currentTime = 0;
+                }}
               >
                 <img
                   src={item.image}
                   alt=""
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
-                {"videoUrl" in item && item.videoUrl && (
-                  <iframe
-                    src={item.videoUrl}
-                    title={`${item.title} video`}
-                    className="pointer-events-none absolute inset-0 z-10 h-full w-full bg-black opacity-0 transition duration-300 group-hover:opacity-100"
-                    loading="lazy"
-                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                  />
-                )}
+                <video
+                  src={item.video}
+                  className="pointer-events-none absolute inset-0 z-10 h-full w-full object-cover opacity-0 transition duration-300 group-hover:opacity-100"
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
                 <div className="absolute inset-0 border border-white/10 transition group-hover:border-primary/70" />
                 <div className="absolute inset-x-0 bottom-0 p-6">
