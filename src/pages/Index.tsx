@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
 import Hero from "@/components/Hero";
 import card1 from "@/assets/card1.png";
 import card2 from "@/assets/card2.png";
@@ -32,7 +31,7 @@ const homeLinks = [
     description: "Pick the right intensity, duration, and training goal.",
     href: "/programs",
     image: card3,
-    label: "Group Classes",
+    label: "Programs",
     video: groupClassesVideo,
   },
   {
@@ -253,14 +252,13 @@ const Index = () => (
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
                 <div className="absolute inset-0 border border-white/10 transition group-hover:border-primary/70" />
-                <div className="absolute inset-x-0 bottom-0 p-6">
-                  <h3 className="max-w-[12ch] text-4xl font-black uppercase leading-[0.95] text-white drop-shadow-xl md:text-5xl xl:text-[2.65rem]">
+                <div className="absolute inset-x-0 bottom-0 z-20 translate-y-14 p-6 text-center transition duration-300 group-hover:translate-y-0">
+                  <h3 className="mx-auto max-w-[12ch] text-4xl font-black uppercase leading-[0.95] text-white drop-shadow-xl md:text-5xl xl:text-[2.65rem]">
                     {item.label}
                   </h3>
-                  <div className="mt-5 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.18em] text-energy opacity-0 transition duration-300 group-hover:translate-x-1 group-hover:opacity-100">
-                    Open
-                    <ArrowRight className="h-4 w-4" />
-                  </div>
+                  <p className="mx-auto mt-4 max-w-[24ch] text-sm font-semibold leading-relaxed text-white/90 opacity-0 drop-shadow-lg transition duration-300 group-hover:opacity-100">
+                    {item.description}
+                  </p>
                 </div>
               </Link>
             ))}
