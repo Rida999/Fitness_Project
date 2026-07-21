@@ -17,6 +17,7 @@ const homeLinks = [
     image: card1,
     label: "Member Dashboard",
     video: gymfactoryVideo,
+    textOffset: "translate-y-20 group-hover:translate-y-0",
   },
   {
     title: "Trainers",
@@ -31,7 +32,7 @@ const homeLinks = [
     description: "Pick the right intensity, duration, and training goal.",
     href: "/programs",
     image: card3,
-    label: "Programs",
+    label: "Select Program",
     video: groupClassesVideo,
   },
   {
@@ -252,7 +253,11 @@ const Index = () => (
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
                 <div className="absolute inset-0 border border-white/10 transition group-hover:border-primary/70" />
-                <div className="absolute inset-x-0 bottom-0 z-20 translate-y-14 p-6 text-center transition duration-300 group-hover:translate-y-0">
+                <div
+                  className={`absolute inset-x-0 bottom-0 z-20 p-6 text-center transition duration-300 ${
+                    item.textOffset ?? "translate-y-14 group-hover:translate-y-0"
+                  }`}
+                >
                   <h3 className="mx-auto max-w-[12ch] text-4xl font-black uppercase leading-[0.95] text-white drop-shadow-xl md:text-5xl xl:text-[2.65rem]">
                     {item.label}
                   </h3>
