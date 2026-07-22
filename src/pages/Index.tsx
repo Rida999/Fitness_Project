@@ -290,33 +290,47 @@ const Index = () => (
         </div>
       </section>
 
-      <section className="bg-[#0a0707] py-20 text-white">
+      <section className="bg-[#f7f3ee] py-20 text-foreground">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <div className="relative overflow-hidden border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/40 sm:p-8">
-              <div className="absolute inset-x-0 top-0 h-2 bg-primary" />
-              <p className="text-sm font-black uppercase tracking-[0.24em] text-energy">
-                Your Next Plan
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.05fr] lg:items-center">
+            <div>
+              <p className="text-sm font-black uppercase tracking-[0.24em] text-primary">
+                Your Training Plan
               </p>
-              <h2 className="mt-4 text-4xl font-black uppercase leading-none sm:text-5xl">
-                Build the workout before you walk in.
+              <h2 className="mt-4 max-w-xl text-4xl font-black uppercase leading-none sm:text-5xl">
+                Plan it clean. Train it hard.
               </h2>
-              <div className="mt-8 grid grid-cols-2 gap-3">
-                <div className="bg-black/40 p-4">
-                  <Timer className="mb-4 h-6 w-6 text-energy" />
-                  <p className="text-3xl font-black">45-90</p>
-                  <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-white/60">
-                    Minutes
-                  </p>
+              <p className="mt-5 max-w-xl text-base font-medium leading-relaxed text-muted-foreground">
+                Build the day around your goal, match with the right coach, and reserve a session that already feels organized before you arrive.
+              </p>
+
+              <div className="relative mt-8 overflow-hidden bg-white p-5 shadow-2xl shadow-primary/10 sm:p-6">
+                <div className="absolute right-0 top-0 h-20 w-20 bg-energy" />
+                <div className="absolute right-5 top-5 h-20 w-20 bg-primary" />
+                <div className="relative grid gap-3 sm:grid-cols-2">
+                  <div className="border border-primary/15 bg-[#fff8ea] p-4">
+                    <Timer className="mb-4 h-6 w-6 text-primary" />
+                    <p className="text-3xl font-black text-primary">45-90</p>
+                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                      Minute Sessions
+                    </p>
+                  </div>
+                  <div className="border border-energy/40 bg-energy p-4 text-black">
+                    <CalendarCheck className="mb-4 h-6 w-6" />
+                    <p className="text-3xl font-black">Live</p>
+                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-black/70">
+                      Slot Booking
+                    </p>
+                  </div>
                 </div>
-                <div className="bg-primary p-4 text-white">
-                  <CalendarCheck className="mb-4 h-6 w-6" />
-                  <p className="text-3xl font-black">Live</p>
-                  <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-white/80">
-                    Booking
-                  </p>
+
+                <div className="relative mt-4 grid grid-cols-3 gap-2 text-center text-xs font-black uppercase tracking-wide">
+                  <span className="bg-primary px-2 py-3 text-white">Goal</span>
+                  <span className="bg-black px-2 py-3 text-white">Coach</span>
+                  <span className="bg-energy px-2 py-3 text-black">Time</span>
                 </div>
               </div>
+
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <Link
                   to="/book"
@@ -334,13 +348,15 @@ const Index = () => (
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="relative">
+              <div className="absolute -left-4 top-8 hidden h-[calc(100%-4rem)] w-1 bg-primary/20 lg:block" />
+              <div className="space-y-4">
               {planningSteps.map((step, index) => {
                 const Icon = step.icon;
                 return (
                   <div
                     key={step.title}
-                    className="group grid grid-cols-[56px_1fr] gap-4 border border-white/10 bg-white/[0.03] p-4 transition hover:border-primary/60 hover:bg-white/[0.06] sm:grid-cols-[72px_1fr] sm:p-5"
+                    className="group grid grid-cols-[56px_1fr] gap-4 bg-white p-4 shadow-lg shadow-black/5 transition hover:-translate-x-1 hover:shadow-primary/15 sm:grid-cols-[72px_1fr] sm:p-5"
                   >
                     <div className="flex h-14 w-14 items-center justify-center bg-energy text-black transition group-hover:bg-primary group-hover:text-white sm:h-16 sm:w-16">
                       <Icon className="h-7 w-7" />
@@ -350,17 +366,18 @@ const Index = () => (
                         <span className="font-serif text-4xl font-black leading-none text-primary">
                           0{index + 1}
                         </span>
-                        <h3 className="text-xl font-black uppercase text-white">
+                        <h3 className="text-xl font-black uppercase text-foreground">
                           {step.title}
                         </h3>
                       </div>
-                      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/65">
+                      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
                         {step.detail}
                       </p>
                     </div>
                   </div>
                 );
               })}
+              </div>
             </div>
           </div>
         </div>
