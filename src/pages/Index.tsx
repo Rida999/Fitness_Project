@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { ArrowRight, CalendarCheck, ClipboardList, Dumbbell, Timer } from "lucide-react";
 import Hero from "@/components/Hero";
 import card1 from "@/assets/card1.png";
 import card2 from "@/assets/card2.png";
@@ -42,6 +43,24 @@ const homeLinks = [
     image: card4,
     label: "Book Your Session",
     video: bookSessionVideo,
+  },
+];
+
+const planningSteps = [
+  {
+    title: "Set Your Goal",
+    detail: "Choose strength, conditioning, mobility, or a full-body session.",
+    icon: ClipboardList,
+  },
+  {
+    title: "Match The Coach",
+    detail: "Compare trainers by specialty, style, and the plan you want to follow.",
+    icon: Dumbbell,
+  },
+  {
+    title: "Lock The Time",
+    detail: "Reserve an open slot and keep your upcoming workout ready in your dashboard.",
+    icon: CalendarCheck,
   },
 ];
 
@@ -271,27 +290,77 @@ const Index = () => (
         </div>
       </section>
 
-      <section className="py-16 bg-secondary/30">
+      <section className="bg-[#0a0707] py-20 text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-10 items-center">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-wide text-primary">
-                How it works
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div className="relative overflow-hidden border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/40 sm:p-8">
+              <div className="absolute inset-x-0 top-0 h-2 bg-primary" />
+              <p className="text-sm font-black uppercase tracking-[0.24em] text-energy">
+                Your Next Plan
               </p>
-              <h2 className="mt-3 text-3xl md:text-4xl font-bold">
-                A cleaner path from goal to booked session
+              <h2 className="mt-4 text-4xl font-black uppercase leading-none sm:text-5xl">
+                Build the workout before you walk in.
               </h2>
-              <p className="mt-4 text-muted-foreground">
-                Start by checking your dashboard, choose the coach and program that fit the day, then book a time that becomes part of your schedule.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {["Choose trainer", "Pick program", "Reserve slot"].map((step, index) => (
-                <div key={step} className="rounded-lg border bg-card p-5">
-                  <div className="text-3xl font-bold text-primary">0{index + 1}</div>
-                  <div className="mt-3 font-semibold">{step}</div>
+              <div className="mt-8 grid grid-cols-2 gap-3">
+                <div className="bg-black/40 p-4">
+                  <Timer className="mb-4 h-6 w-6 text-energy" />
+                  <p className="text-3xl font-black">45-90</p>
+                  <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-white/60">
+                    Minutes
+                  </p>
                 </div>
-              ))}
+                <div className="bg-primary p-4 text-white">
+                  <CalendarCheck className="mb-4 h-6 w-6" />
+                  <p className="text-3xl font-black">Live</p>
+                  <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-white/80">
+                    Booking
+                  </p>
+                </div>
+              </div>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  to="/book"
+                  className="inline-flex items-center justify-center bg-primary px-5 py-3 text-sm font-black uppercase tracking-wide text-white transition hover:bg-primary/90"
+                >
+                  Start Planning
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+                <Link
+                  to="/trainers"
+                  className="inline-flex items-center justify-center border border-energy bg-energy px-5 py-3 text-sm font-black uppercase tracking-wide text-white transition hover:bg-energy/90"
+                >
+                  View Coaches
+                </Link>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {planningSteps.map((step, index) => {
+                const Icon = step.icon;
+                return (
+                  <div
+                    key={step.title}
+                    className="group grid grid-cols-[56px_1fr] gap-4 border border-white/10 bg-white/[0.03] p-4 transition hover:border-primary/60 hover:bg-white/[0.06] sm:grid-cols-[72px_1fr] sm:p-5"
+                  >
+                    <div className="flex h-14 w-14 items-center justify-center bg-energy text-black transition group-hover:bg-primary group-hover:text-white sm:h-16 sm:w-16">
+                      <Icon className="h-7 w-7" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-3">
+                        <span className="font-serif text-4xl font-black leading-none text-primary">
+                          0{index + 1}
+                        </span>
+                        <h3 className="text-xl font-black uppercase text-white">
+                          {step.title}
+                        </h3>
+                      </div>
+                      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/65">
+                        {step.detail}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
