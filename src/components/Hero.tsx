@@ -29,16 +29,36 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase text-white mb-6 leading-none tracking-wide">
+        <motion.div
+          className="max-w-4xl mx-auto"
+          initial={{ opacity: 0, y: 22, scale: 0.985 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <motion.h1
+            className="text-5xl md:text-7xl lg:text-8xl font-black uppercase text-white mb-6 leading-none tracking-wide"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+          >
             Gym
             <span className="block text-energy">Factory</span>
-          </h1>
-          <p className="mb-6 text-sm font-black uppercase tracking-[0.28em] text-energy">
+          </motion.h1>
+          <motion.p
+            className="mb-6 text-sm font-black uppercase tracking-[0.28em] text-energy"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          >
             One Life - One Body - Make It Count
-          </p>
+          </motion.p>
 
-          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+          <motion.div
+            className="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
+          >
             <Button
               asChild
               variant="outline"
@@ -60,10 +80,15 @@ const Hero = () => {
               <Play className="mr-2 h-5 w-5 group-hover:animate-pulse" />
               Watch Demo
             </Button>
-          </div>
+          </motion.div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto">
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.56, ease: [0.16, 1, 0.3, 1] }}
+          >
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-white mb-2">500+</div>
               <div className="text-white/80">Happy Clients</div>
@@ -76,8 +101,8 @@ const Hero = () => {
               <div className="text-3xl md:text-4xl font-bold text-white mb-2">10+</div>
               <div className="text-white/80">Programs</div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* Scroll Indicator */}

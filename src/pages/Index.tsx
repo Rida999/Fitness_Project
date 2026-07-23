@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, CalendarCheck, ClipboardList, Dumbbell, Timer } from "lucide-react";
+import { motion } from "framer-motion";
 import Hero from "@/components/Hero";
 import card1 from "@/assets/card1.png";
 import card2 from "@/assets/card2.png";
@@ -66,6 +67,13 @@ const planningSteps = [
 
 const woodTexture =
   "https://res.cloudinary.com/ggus-dev/image/private/s--Pp8T8gbI--/c_auto,g_auto,w_400,h_400/v1/25fcf1e9/wood.webp?_a=BAAAV6DQ";
+
+const reveal = {
+  hidden: { opacity: 0, y: 22, scale: 0.985 },
+  visible: { opacity: 1, y: 0, scale: 1 },
+};
+
+const revealTransition = { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const };
 
 const historyTiles = [
   {
@@ -136,7 +144,7 @@ const Index = () => (
         <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
             {historyTiles.map((tile, index) => (
-              <div
+              <motion.div
                 key={`${tile.type}-${index}`}
                 className={`group relative aspect-square overflow-hidden ${
                   tile.type === "title" || tile.type === "cta"
@@ -148,6 +156,11 @@ const Index = () => (
                     ? { backgroundImage: `url(${woodTexture})` }
                     : undefined
                 }
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.25 }}
+                variants={reveal}
+                transition={{ ...revealTransition, delay: (index % 4) * 0.06 }}
               >
                 {"image" in tile && tile.image && (
                   <img
@@ -206,14 +219,21 @@ const Index = () => (
                     </p>
                   )}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
       <section className="bg-white py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mb-10">
+          <motion.div
+            className="max-w-3xl mb-10"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.35 }}
+            variants={reveal}
+            transition={revealTransition}
+          >
             <p className="text-sm font-semibold uppercase tracking-wide text-energy">
               Navigate Gym Factory
             </p>
@@ -223,12 +243,19 @@ const Index = () => (
             <p className="mt-4 text-lg text-muted-foreground">
               Use Home as your launch point. Open the dashboard to manage your schedule, browse trainers and programs in detail, or go straight to booking.
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {homeLinks.map((item) => (
-              <Link
+            {homeLinks.map((item, index) => (
+              <motion.div
                 key={item.href}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.25 }}
+                variants={reveal}
+                transition={{ ...revealTransition, delay: index * 0.08 }}
+              >
+              <Link
                 to={item.href}
                 aria-label={`${item.title}: ${item.description}`}
                 className="group relative block h-[430px] overflow-hidden bg-black shadow-2xl shadow-black/35 outline-none transition duration-300 hover:-translate-y-1 hover:shadow-primary/35 focus-visible:ring-2 focus-visible:ring-energy"
@@ -285,6 +312,7 @@ const Index = () => (
                   </p>
                 </div>
               </Link>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -293,7 +321,13 @@ const Index = () => (
       <section className="bg-[#f7f3ee] py-20 text-foreground">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.05fr] lg:items-center">
-            <div>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+              variants={reveal}
+              transition={revealTransition}
+            >
               <p className="text-sm font-black uppercase tracking-[0.24em] text-primary">
                 Your Training Plan
               </p>
@@ -346,7 +380,7 @@ const Index = () => (
                   View Coaches
                 </Link>
               </div>
-            </div>
+            </motion.div>
 
             <div className="relative">
               <div className="absolute -left-4 top-8 hidden h-[calc(100%-4rem)] w-1 bg-primary/20 lg:block" />
@@ -354,9 +388,14 @@ const Index = () => (
               {planningSteps.map((step, index) => {
                 const Icon = step.icon;
                 return (
-                  <div
+                  <motion.div
                     key={step.title}
                     className="group grid grid-cols-[56px_1fr] gap-4 bg-white p-4 shadow-lg shadow-black/5 transition hover:-translate-x-1 hover:shadow-primary/15 sm:grid-cols-[72px_1fr] sm:p-5"
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.3 }}
+                    variants={reveal}
+                    transition={{ ...revealTransition, delay: index * 0.08 }}
                   >
                     <div className="flex h-14 w-14 items-center justify-center bg-energy text-black transition group-hover:bg-primary group-hover:text-white sm:h-16 sm:w-16">
                       <Icon className="h-7 w-7" />
@@ -374,7 +413,7 @@ const Index = () => (
                         {step.detail}
                       </p>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
               </div>
