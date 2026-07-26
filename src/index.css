@@ -131,3 +131,46 @@ All colors MUST be HSL.
     transform: translateX(220%);
   }
 }
+
+.service-glow-line {
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: right;
+  animation: service-glow-out 2400ms cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+.group:hover > .service-glow-line {
+  animation: service-glow-in 2400ms cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+@keyframes service-glow-in {
+  0% {
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+@keyframes service-glow-out {
+  0% {
+    opacity: 1;
+    transform: scaleX(1);
+    transform-origin: right;
+  }
+  82% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: right;
+  }
+}
