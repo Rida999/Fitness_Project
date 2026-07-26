@@ -390,19 +390,24 @@ const Index = () => (
                           {service.detail}
                         </p>
                       </div>
-                      <div className="relative min-h-[170px] overflow-hidden">
-                        <span className="absolute right-0 top-0 font-black leading-none text-white/20 transition duration-300 group-hover:text-white/95 group-hover:drop-shadow-[0_0_18px_rgba(255,255,255,0.35)] text-[8rem] sm:text-[10rem]">
+                      <div className="relative min-h-[220px] overflow-hidden">
+                        <span className="absolute right-0 top-6 z-40 font-black leading-none text-white/20 transition duration-300 group-hover:text-white/95 group-hover:drop-shadow-[0_0_18px_rgba(255,255,255,0.35)] text-[8rem] sm:text-[10rem]">
                           {serviceNumber}
                         </span>
                         <img
                           src={service.image}
                           alt=""
-                          className="absolute right-24 top-2 z-10 h-24 w-24 rotate-[-10deg] object-cover opacity-0 shadow-2xl transition duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:opacity-100"
+                          className="absolute right-36 top-16 z-30 h-[72px] w-36 translate-y-5 rotate-[9deg] rounded-[28px] object-cover opacity-0 shadow-2xl transition duration-700 ease-out group-hover:translate-y-0 group-hover:rotate-[-8deg] group-hover:scale-105 group-hover:opacity-100"
                         />
                         <img
                           src={service.image}
                           alt=""
-                          className="absolute right-10 top-20 z-10 h-20 w-28 rotate-[12deg] object-cover opacity-0 shadow-2xl transition duration-300 group-hover:rotate-3 group-hover:scale-105 group-hover:opacity-100"
+                          className="absolute right-32 top-3 z-10 h-14 w-24 translate-y-5 rotate-[-8deg] rounded-[24px] object-cover opacity-0 shadow-2xl transition duration-700 ease-out group-hover:translate-y-0 group-hover:rotate-[14deg] group-hover:scale-105 group-hover:opacity-100 group-hover:delay-150"
+                        />
+                        <img
+                          src={service.image}
+                          alt=""
+                          className="absolute right-[8rem] top-28 z-50 h-[68px] w-[68px] translate-y-5 rotate-[14deg] rounded-[20px] object-cover opacity-0 shadow-2xl transition duration-700 ease-out group-hover:translate-y-0 group-hover:rotate-[-12deg] group-hover:scale-105 group-hover:opacity-100 group-hover:delay-300"
                         />
                       </div>
                     </div>
