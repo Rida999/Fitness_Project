@@ -373,38 +373,39 @@ const Index = () => (
                 return (
                   <motion.div
                     key={service.title}
-                    className="group relative border-t border-white/15 pt-10"
+                    className="group relative border-b border-white/10 px-0 py-10 transition duration-300 hover:border-energy/80 hover:bg-white/[0.035] hover:px-5 hover:shadow-2xl hover:shadow-energy/10"
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.3 }}
                     variants={reveal}
                     transition={{ ...revealTransition, delay: index * 0.08 }}
                   >
+                    <div className="pointer-events-none absolute -bottom-px left-0 h-px w-0 bg-gradient-to-r from-energy via-primary to-energy opacity-0 shadow-[0_0_18px_rgba(225,176,31,0.8)] transition-all duration-500 group-hover:w-full group-hover:opacity-100" />
                     <div className="grid gap-6 md:grid-cols-[1fr_250px] md:items-center">
                       <div>
-                        <h3 className="text-3xl font-black uppercase text-white sm:text-4xl">
+                        <h3 className="text-3xl font-black uppercase text-white/75 transition duration-300 group-hover:text-white sm:text-4xl">
                           {service.title}
                         </h3>
-                        <p className="mt-5 max-w-xl text-lg font-medium leading-relaxed text-white/60">
+                        <p className="mt-5 max-w-xl text-lg font-medium leading-relaxed text-white/45 transition duration-300 group-hover:text-white/75">
                           {service.detail}
                         </p>
                         {index === 0 && (
-                          <div className="mt-10 h-3 w-full bg-gradient-to-r from-energy via-energy to-primary" />
+                          <div className="mt-10 h-3 w-full bg-gradient-to-r from-energy/45 via-energy/50 to-primary/45 transition duration-300 group-hover:from-energy group-hover:via-energy group-hover:to-primary group-hover:shadow-[0_0_22px_rgba(225,176,31,0.55)]" />
                         )}
                       </div>
                       <div className="relative min-h-[170px] overflow-hidden">
-                        <span className="absolute right-0 top-0 font-black leading-none text-white/95 text-[8rem] sm:text-[10rem]">
+                        <span className="absolute right-0 top-0 font-black leading-none text-white/20 transition duration-300 group-hover:text-white/95 group-hover:drop-shadow-[0_0_18px_rgba(255,255,255,0.35)] text-[8rem] sm:text-[10rem]">
                           {serviceNumber}
                         </span>
                         <img
                           src={service.image}
                           alt=""
-                          className="absolute right-24 top-2 h-24 w-24 rotate-[-10deg] object-cover shadow-2xl transition duration-300 group-hover:rotate-0 group-hover:scale-105"
+                          className="absolute right-24 top-2 z-10 h-24 w-24 rotate-[-10deg] object-cover opacity-0 shadow-2xl transition duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:opacity-100"
                         />
                         <img
                           src={service.image}
                           alt=""
-                          className="absolute right-10 top-20 h-20 w-28 rotate-[12deg] object-cover shadow-2xl transition duration-300 group-hover:rotate-3 group-hover:scale-105"
+                          className="absolute right-10 top-20 z-10 h-20 w-28 rotate-[12deg] object-cover opacity-0 shadow-2xl transition duration-300 group-hover:rotate-3 group-hover:scale-105 group-hover:opacity-100"
                         />
                       </div>
                     </div>
