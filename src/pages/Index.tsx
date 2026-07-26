@@ -51,17 +51,17 @@ const services = [
   {
     title: "Personal Training",
     detail: "One-on-one coaching, fully focused on your goals, fitness level, and progress.",
-    image: card2,
+    images: [card2, card3, card4],
   },
   {
     title: "Nutrition Guidance",
     detail: "Simple, practical food advice that works in real life. No extremes, just balance.",
-    image: card3,
+    images: [card2, card3, card4],
   },
   {
     title: "Strength & Conditioning",
     detail: "Programs built to improve power, endurance, movement, and long-term performance.",
-    image: card4,
+    images: [card2, card3, card4],
   },
 ];
 
@@ -370,10 +370,22 @@ const Index = () => (
             <div className="space-y-12 lg:pt-4">
               {services.map((service, index) => {
                 const serviceNumber = String(index + 1).padStart(2, "0");
+                const chipPosition =
+                  index === 0
+                    ? {
+                        middle: "right-36",
+                        top: "right-32",
+                        front: "right-[8.75rem]",
+                      }
+                    : {
+                        middle: "right-[10.25rem]",
+                        top: "right-[9.75rem]",
+                        front: "right-[10rem]",
+                      };
                 return (
                   <motion.div
                     key={service.title}
-                    className="group relative border-b border-white/10 px-0 pb-5 pt-8"
+                    className="group relative border-b border-white/10 px-0 pb-5 pt-8 md:min-h-[220px]"
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.3 }}
@@ -381,33 +393,33 @@ const Index = () => (
                     transition={{ ...revealTransition, delay: index * 0.08 }}
                   >
                     <div className="service-glow-line pointer-events-none absolute -bottom-px left-0 h-[5px] w-full bg-gradient-to-r from-energy via-primary to-energy shadow-[0_0_22px_rgba(225,176,31,0.72)]" />
-                    <div className="grid gap-6 md:grid-cols-[1fr_250px] md:items-center">
-                      <div className="group/text w-fit max-w-xl">
-                        <h3 className="text-3xl font-black uppercase text-white/75 transition duration-300 group-hover/text:text-white sm:text-4xl">
+                    <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_320px] md:items-center">
+                      <div className="relative z-50 w-fit max-w-xl">
+                        <h3 className="text-3xl font-black uppercase text-white/75 transition duration-300 group-hover:text-white sm:text-4xl">
                           {service.title}
                         </h3>
-                        <p className="mt-5 max-w-xl text-lg font-medium leading-relaxed text-white/45 transition duration-300 group-hover/text:text-white/75">
+                        <p className="mt-5 max-w-xl text-lg font-medium leading-relaxed text-white/45 transition duration-300 group-hover:text-white/75">
                           {service.detail}
                         </p>
                       </div>
-                      <div className="relative min-h-[220px] overflow-hidden">
+                      <div className="relative min-h-[220px] overflow-hidden md:absolute md:inset-y-0 md:right-0 md:w-[360px]">
                         <span className="absolute right-0 top-6 z-40 font-black leading-none text-white/20 transition duration-300 group-hover:text-white/95 group-hover:drop-shadow-[0_0_18px_rgba(255,255,255,0.35)] text-[8rem] sm:text-[10rem]">
                           {serviceNumber}
                         </span>
                         <img
-                          src={service.image}
+                          src={service.images[0]}
                           alt=""
-                          className="absolute right-36 top-16 z-30 h-[72px] w-36 translate-y-5 rotate-[9deg] rounded-[28px] object-cover opacity-0 shadow-2xl transition duration-700 ease-out group-hover:translate-y-0 group-hover:rotate-[-8deg] group-hover:scale-105 group-hover:opacity-100"
+                          className={`absolute ${chipPosition.middle} top-16 z-30 h-[72px] w-32 translate-y-5 rotate-[9deg] rounded-[18px] object-cover opacity-0 shadow-2xl transition duration-700 ease-out group-hover:translate-y-0 group-hover:rotate-[-8deg] group-hover:scale-105 group-hover:opacity-100`}
                         />
                         <img
-                          src={service.image}
+                          src={service.images[1]}
                           alt=""
-                          className="absolute right-32 top-3 z-10 h-14 w-24 translate-y-5 rotate-[-8deg] rounded-[24px] object-cover opacity-0 shadow-2xl transition duration-700 ease-out group-hover:translate-y-0 group-hover:rotate-[14deg] group-hover:scale-105 group-hover:opacity-100 group-hover:delay-150"
+                          className={`absolute ${chipPosition.top} top-3 z-10 h-14 w-24 translate-y-5 rotate-[-8deg] rounded-[24px] object-cover opacity-0 shadow-2xl transition duration-700 ease-out group-hover:translate-y-0 group-hover:rotate-[14deg] group-hover:scale-105 group-hover:opacity-100 group-hover:delay-150`}
                         />
                         <img
-                          src={service.image}
+                          src={service.images[2]}
                           alt=""
-                          className="absolute right-[8rem] top-28 z-50 h-[68px] w-[68px] translate-y-5 rotate-[14deg] rounded-[20px] object-cover opacity-0 shadow-2xl transition duration-700 ease-out group-hover:translate-y-0 group-hover:rotate-[-12deg] group-hover:scale-105 group-hover:opacity-100 group-hover:delay-300"
+                          className={`absolute ${chipPosition.front} top-28 z-50 h-14 w-[86px] translate-y-5 rotate-[14deg] rounded-[20px] object-cover opacity-0 shadow-2xl transition duration-700 ease-out group-hover:translate-y-0 group-hover:rotate-[-12deg] group-hover:scale-105 group-hover:opacity-100 group-hover:delay-300`}
                         />
                       </div>
                     </div>
