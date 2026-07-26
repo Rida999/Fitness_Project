@@ -101,7 +101,7 @@ const Header = () => {
       : "A";
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white">
+    <header className="sticky top-0 z-[100] w-full border-b bg-white">
       <div className="container relative mx-auto flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <button
           type="button"

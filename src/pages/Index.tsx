@@ -394,7 +394,7 @@ const Index = () => (
                   >
                     <div className="service-glow-line pointer-events-none absolute -bottom-px left-0 h-[5px] w-full bg-gradient-to-r from-energy via-primary to-energy shadow-[0_0_22px_rgba(225,176,31,0.72)]" />
                     <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_320px] md:items-center">
-                      <div className="relative z-50 w-fit max-w-xl">
+                      <div className="relative z-20 w-fit max-w-xl">
                         <h3 className="text-3xl font-black uppercase text-white/75 transition duration-300 group-hover:text-white sm:text-4xl">
                           {service.title}
                         </h3>
