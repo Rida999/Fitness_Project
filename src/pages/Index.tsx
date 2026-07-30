@@ -323,7 +323,7 @@ const Index = () => (
         </div>
       </section>
 
-      <section className="overflow-hidden bg-[#0b0b0a] py-20 text-white">
+      <section className="overflow-hidden bg-[#11100e] py-20 text-[#f8f5ef]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.85fr_1.15fr]">
             <motion.div
@@ -334,33 +334,33 @@ const Index = () => (
               variants={reveal}
               transition={revealTransition}
             >
-              <p className="text-sm font-black uppercase tracking-wide text-white">
+              <p className="text-sm font-black uppercase tracking-wide text-[#f8f5ef]">
                 Our Services
               </p>
               <h2 className="mt-8 max-w-3xl text-5xl font-black uppercase leading-[0.95] sm:text-6xl lg:text-7xl">
-                <span className="block font-light text-energy">Not just workouts.</span>
-                <span className="block text-white">A whole approach.</span>
+                <span className="block font-light text-[#e1b01f]">Not just workouts.</span>
+                <span className="block text-[#f8f5ef]">A whole approach.</span>
               </h2>
-              <p className="mt-8 max-w-lg text-lg font-medium leading-relaxed text-white/65">
+              <p className="mt-8 max-w-lg text-lg font-medium leading-relaxed text-[#f8f5ef]/65">
                 From personal training to nutrition and recovery, Gym Factory covers what your body truly needs.
               </p>
 
               <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <Link
                   to="/book"
-                  className="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-sm font-black uppercase tracking-wide text-black transition hover:bg-energy"
+                  className="inline-flex items-center justify-center rounded-full bg-[#f8f5ef] px-8 py-4 text-sm font-black uppercase tracking-wide text-[#11100e] transition hover:bg-[#e1b01f]"
                 >
                   Explore Pricing
-                  <span className="ml-4 flex h-10 w-10 items-center justify-center rounded-full bg-white text-black ring-1 ring-black/10">
+                  <span className="ml-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#f8f5ef] text-[#11100e] ring-1 ring-black/10">
                     <ArrowRight className="h-5 w-5 -rotate-45" />
                   </span>
                 </Link>
                 <Link
                   to="/programs"
-                  className="inline-flex items-center justify-center rounded-full border-2 border-white px-8 py-4 text-sm font-black uppercase tracking-wide text-white transition hover:border-energy hover:text-energy"
+                  className="inline-flex items-center justify-center rounded-full border-2 border-[#f8f5ef] px-8 py-4 text-sm font-black uppercase tracking-wide text-[#f8f5ef] transition hover:border-[#c91f2b] hover:text-[#e1b01f]"
                 >
                   Watch Video
-                  <span className="ml-4 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white group-hover:border-energy">
+                  <span className="ml-4 flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#f8f5ef]">
                     <Play className="h-4 w-4 fill-current" />
                   </span>
                 </Link>
@@ -385,25 +385,25 @@ const Index = () => (
                 return (
                   <motion.div
                     key={service.title}
-                    className="group relative border-b border-white/10 px-0 pb-5 pt-8 md:min-h-[220px]"
+                    className="group relative border-b border-[#f8f5ef]/10 px-0 pb-5 pt-8 md:min-h-[220px]"
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.3 }}
                     variants={reveal}
                     transition={{ ...revealTransition, delay: index * 0.08 }}
                   >
-                    <div className="service-glow-line pointer-events-none absolute -bottom-px left-0 h-[5px] w-full bg-gradient-to-r from-energy via-primary to-energy shadow-[0_0_22px_rgba(225,176,31,0.72)]" />
+                    <div className="service-glow-line pointer-events-none absolute -bottom-px left-0 h-[5px] w-full bg-gradient-to-r from-[#e1b01f] via-[#c91f2b] to-[#e1b01f] shadow-[0_0_24px_rgba(225,176,31,0.72)]" />
                     <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_320px] md:items-center">
                       <div className="relative z-20 w-fit max-w-xl">
-                        <h3 className="text-3xl font-black uppercase text-white/75 transition duration-300 group-hover:text-white sm:text-4xl">
+                        <h3 className="text-3xl font-black uppercase text-[#f8f5ef]/75 transition duration-300 group-hover:text-[#f8f5ef] sm:text-4xl">
                           {service.title}
                         </h3>
-                        <p className="mt-5 max-w-xl text-lg font-medium leading-relaxed text-white/45 transition duration-300 group-hover:text-white/75">
+                        <p className="mt-5 max-w-xl text-lg font-medium leading-relaxed text-[#f8f5ef]/45 transition duration-300 group-hover:text-[#f8f5ef]/75">
                           {service.detail}
                         </p>
                       </div>
                       <div className="relative min-h-[220px] overflow-hidden md:absolute md:inset-y-0 md:right-0 md:w-[360px]">
-                        <span className="absolute right-0 top-6 z-40 font-black leading-none text-white/20 transition duration-300 group-hover:text-white/95 group-hover:drop-shadow-[0_0_18px_rgba(255,255,255,0.35)] text-[8rem] sm:text-[10rem]">
+                        <span className="absolute right-0 top-6 z-40 font-black leading-none text-[#f8f5ef]/18 transition duration-300 group-hover:text-[#f8f5ef]/95 group-hover:drop-shadow-[0_0_18px_rgba(225,176,31,0.35)] text-[8rem] sm:text-[10rem]">
                           {serviceNumber}
                         </span>
                         <img
