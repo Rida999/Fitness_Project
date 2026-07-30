@@ -345,23 +345,27 @@ const Index = () => (
                 From personal training to nutrition and recovery, Gym Factory covers what your body truly needs.
               </p>
 
-              <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="mt-10 flex flex-col gap-5 sm:flex-row sm:items-center">
                 <Link
                   to="/book"
-                  className="inline-flex items-center justify-center rounded-full bg-[#f8f5ef] px-8 py-4 text-sm font-black uppercase tracking-wide text-[#11100e] transition hover:bg-[#e1b01f]"
+                  className="group/price inline-flex w-fit items-center text-[#11100e]"
                 >
-                  Explore Pricing
-                  <span className="ml-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#f8f5ef] text-[#11100e] ring-1 ring-black/10">
-                    <ArrowRight className="h-5 w-5 -rotate-45" />
+                  <span className="flex h-14 min-w-[190px] items-center justify-center whitespace-nowrap rounded-full bg-[#f8f5ef] px-8 text-sm font-black uppercase tracking-wide shadow-[0_14px_34px_rgba(0,0,0,0.2)] transition duration-300 group-hover/price:-translate-y-0.5 sm:min-w-[220px] sm:px-9 sm:text-base">
+                    Explore Pricing
+                  </span>
+                  <span className="ml-1.5 flex h-14 w-14 items-center justify-center rounded-full bg-[#f8f5ef] shadow-[0_14px_34px_rgba(0,0,0,0.2)] transition duration-300 group-hover/price:translate-x-2">
+                    <ArrowRight className="h-6 w-6 -rotate-45 transition duration-300 group-hover/price:rotate-0" />
                   </span>
                 </Link>
                 <Link
                   to="/programs"
-                  className="inline-flex items-center justify-center rounded-full border-2 border-[#f8f5ef] px-8 py-4 text-sm font-black uppercase tracking-wide text-[#f8f5ef] transition hover:border-[#c91f2b] hover:text-[#e1b01f]"
+                  className="group/video inline-flex w-fit items-center text-[#f8f5ef]"
                 >
-                  Watch Video
-                  <span className="ml-4 flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#f8f5ef]">
-                    <Play className="h-4 w-4 fill-current" />
+                  <span className="flex h-14 min-w-[178px] items-center justify-center whitespace-nowrap rounded-full border-2 border-[#f8f5ef] px-8 text-sm font-black uppercase tracking-wide transition duration-300 group-hover/video:-translate-y-0.5 group-hover/video:bg-[#f8f5ef] group-hover/video:text-[#11100e] sm:min-w-[206px] sm:px-9 sm:text-base">
+                    Watch Video
+                  </span>
+                  <span className="ml-1.5 flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#f8f5ef] transition duration-300 group-hover/video:-translate-y-0.5 group-hover/video:bg-[#f8f5ef] group-hover/video:text-[#11100e]">
+                    <Play className="h-4 w-4 fill-current transition duration-300 group-hover/video:scale-110" />
                   </span>
                 </Link>
               </div>
