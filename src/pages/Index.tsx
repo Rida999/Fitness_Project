@@ -353,8 +353,8 @@ const Index = () => (
                   <span className="flex h-14 min-w-[190px] items-center justify-center whitespace-nowrap rounded-full bg-[#f8f5ef] px-8 text-sm font-black uppercase tracking-wide shadow-[0_14px_34px_rgba(0,0,0,0.2)] transition duration-300 group-hover/price:-translate-y-0.5 sm:min-w-[220px] sm:px-9 sm:text-base">
                     Explore Pricing
                   </span>
-                  <span className="ml-1.5 flex h-14 w-14 items-center justify-center rounded-full bg-[#f8f5ef] shadow-[0_14px_34px_rgba(0,0,0,0.2)] transition duration-300 group-hover/price:translate-x-2">
-                    <ArrowRight className="h-6 w-6 -rotate-45 transition duration-300 group-hover/price:rotate-0" />
+                  <span className="ml-1.5 flex h-14 w-14 items-center justify-center rounded-full bg-[#f8f5ef] shadow-[0_14px_34px_rgba(0,0,0,0.2)] transition duration-300 group-focus-visible/price:translate-x-2 group-hover/price:translate-x-2">
+                    <ArrowRight className="h-6 w-6 -rotate-45 transition duration-300 group-focus-visible/price:rotate-0 group-hover/price:rotate-0" />
                   </span>
                 </Link>
                 <Link
