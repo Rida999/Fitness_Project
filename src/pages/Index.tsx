@@ -348,7 +348,6 @@ const Index = () => (
               <div className="mt-10 flex flex-col gap-5 sm:flex-row sm:items-center">
                 <Link
                   to="/book"
-                  title="Explore pricing and reserve a Gym Factory session"
                   className="group/price inline-flex w-fit items-center text-[#11100e]"
                 >
                   <span className="flex h-14 min-w-[190px] items-center justify-center whitespace-nowrap rounded-full bg-[#f8f5ef] px-8 text-sm font-black uppercase tracking-wide shadow-[0_14px_34px_rgba(0,0,0,0.2)] transition duration-300 group-hover/price:-translate-y-0.5 sm:min-w-[220px] sm:px-9 sm:text-base">
@@ -360,7 +359,6 @@ const Index = () => (
                 </Link>
                 <Link
                   to="/programs"
-                  title="Watch Gym Factory program videos"
                   className="group/video inline-flex w-fit items-center text-[#f8f5ef]"
                 >
                   <span className="flex h-14 min-w-[178px] items-center justify-center whitespace-nowrap rounded-full border-2 border-[#f8f5ef] px-8 text-sm font-black uppercase tracking-wide transition duration-300 group-hover/video:-translate-y-0.5 group-hover/video:bg-[#f8f5ef] group-hover/video:text-[#11100e] sm:min-w-[206px] sm:px-9 sm:text-base">
