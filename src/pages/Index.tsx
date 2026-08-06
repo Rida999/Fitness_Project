@@ -51,16 +51,19 @@ const services = [
   {
     title: "Personal Training",
     detail: "One-on-one coaching, fully focused on your goals, fitness level, and progress.",
+    highlights: ["Private coaching", "Goal tracking"],
     images: [card2, card3, card4],
   },
   {
     title: "Nutrition Guidance",
     detail: "Simple, practical food advice that works in real life. No extremes, just balance.",
+    highlights: ["Practical plans", "Better habits"],
     images: [card2, card3, card4],
   },
   {
     title: "Strength & Conditioning",
     detail: "Programs built to improve power, endurance, movement, and long-term performance.",
+    highlights: ["Power work", "Performance"],
     images: [card2, card3, card4],
   },
 ];
@@ -402,6 +405,16 @@ const Index = () => (
                         <h3 className="text-3xl font-black uppercase text-[#f8f5ef]/75 transition duration-300 group-hover:text-[#f8f5ef] sm:text-4xl">
                           {service.title}
                         </h3>
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {service.highlights.map((highlight) => (
+                            <span
+                              key={highlight}
+                              className="rounded-full border border-[#e1b01f]/35 px-3 py-1 text-xs font-black uppercase tracking-wide text-[#e1b01f]/80 transition duration-300 group-hover:border-[#e1b01f]/70 group-hover:text-[#e1b01f]"
+                            >
+                              {highlight}
+                            </span>
+                          ))}
+                        </div>
                         <p className="mt-5 max-w-xl text-lg font-medium leading-relaxed text-[#f8f5ef]/45 transition duration-300 group-hover:text-[#f8f5ef]/75">
                           {service.detail}
                         </p>
